@@ -1,7 +1,8 @@
 """Headless walkthrough of index.html.
 
-Walks to the first letter, opens and closes it, checks the counter, then loads a
-phone-sized viewport. Screenshots go to scripts/out/. Exits non-zero on a page
+Holds the up arrow to walk to the first letter, checks the rope holds, opens and closes
+the letter, and checks the counter. Then checks that dragging turns the camera without
+moving her, and that holding the on-screen arrow walks her. Last, loads a phone-sized viewport. Screenshots go to scripts/out/. Exits non-zero on a page
 error or a failed check.
 
 Usage:
@@ -73,21 +74,16 @@ async def main() -> int:
 
         await page.click("#enterBtn")
         await page.wait_for_selector("#firstHint:not([hidden])", timeout=SLOW)
-        await page.mouse.move(550, 345)
-        for _ in range(16):
-            await page.mouse.wheel(0, 100)
-            await page.wait_for_timeout(100)
+        await page.keyboard.down("ArrowUp")
         await page.wait_for_selector("#prompt:not([hidden])", timeout=SLOW)
         await page.wait_for_timeout(3000)
         await page.screenshot(path=OUT / "2_first_letter.png")
 
-        # Scrolling past a closed rope must not move the gate.
+        # Holding the arrow against a closed rope must not move the gate.
         gate_before = await page.evaluate("document.querySelector('#chCount').textContent")
-        for _ in range(10):
-            await page.mouse.wheel(0, 240)
-            await page.wait_for_timeout(60)
-        await page.wait_for_timeout(1500)
+        await page.wait_for_timeout(2500)
         gate_after = await page.evaluate("document.querySelector('#chCount').textContent")
+        await page.keyboard.up("ArrowUp")
         if gate_after != gate_before:
             failures.append(f"walked past a locked letter: {gate_before} -> {gate_after}")
 
@@ -101,6 +97,30 @@ async def main() -> int:
         count = await page.evaluate("document.querySelector('#readCount').textContent")
         if count != "1":
             failures.append(f"expected 1 letter opened, page shows {count}")
+
+        # Dragging turns the camera around her; it must not walk her.
+        rail = "parseFloat(document.querySelector('#railHer').style.left)"
+        before = await page.evaluate(rail)
+        await page.mouse.move(300, 300)
+        await page.mouse.down()
+        for k in range(12):
+            await page.mouse.move(300 + k * 30, 300 + k * 6)
+            await page.wait_for_timeout(60)
+        await page.mouse.up()
+        await page.wait_for_timeout(1500)
+        await page.screenshot(path=OUT / "3b_looking_around.png")
+        if abs(await page.evaluate(rail) - before) > 0.5:
+            failures.append("dragging the view moved her along the path")
+
+        # Holding the on-screen forward arrow walks her.
+        box = await page.locator("#padFwd").bounding_box()
+        await page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+        await page.mouse.down()
+        try:
+            await page.wait_for_function(f"{rail} > {before + 1}", timeout=SLOW)
+        except Exception:
+            failures.append("holding the on-screen arrow did not walk her")
+        await page.mouse.up()
         await ctx.close()
 
         # Phone: intro and first steps
