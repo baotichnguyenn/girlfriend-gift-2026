@@ -104,21 +104,24 @@ export function grass() {
   }), 6, 6);
 }
 
-// Garden path: irregular flagstones in mortar. One tile is 3 units square.
-export function flagstone() {
-  return tiled(canvasTex(512, 512, (x, W) => {
-    const rnd = seeded(57), rows = 5, rh = W / rows;
-    x.fillStyle = '#6f675c'; x.fillRect(0, 0, W, W);
-    // courses of stones of random length, staggered row to row; each course is exactly W long and wraps at the edge
-    for (let j = 0; j < rows; j++) for (let start = rnd() * 90, cx = start; cx < start + W - 1; ) {
-      let len = 70 + rnd() * 90; if (start + W - cx < len + 50) len = start + W - cx;
-      const l = 70 + rnd() * 14;
-      x.fillStyle = hsl(30 + rnd() * 12, 12 + rnd() * 8, l - 16);
-      const r = 10, a0 = cx + 4, b = j * rh + 4, w = len - 8, h = rh - 8, d1 = rnd() * 6, d2 = rnd() * 6; cx += len;
-      for (const a of a0 + w > W ? [a0, a0 - W] : [a0]) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b + d1, a + w, b + h, r); x.arcTo(a + w - d2, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.fill(); }
-      for (let k = 0; k < 120; k++) { x.fillStyle = 'rgba(70,60,50,' + (rnd() * .08).toFixed(3) + ')'; x.fillRect((a0 + rnd() * w) % W, b + rnd() * h, 3, 3); }
-    }
-  }), 3, 3);
+// Raked pale gravel for the allées, as in a French garden. One tile is 2 units square.
+export function gravel() {
+  return tiled(canvasTex(256, 256, (x, W) => {
+    const rnd = seeded(61);
+    x.fillStyle = '#b3a58c'; x.fillRect(0, 0, W, W);
+    for (let k = 0; k < 2600; k++) { x.fillStyle = hsl(30 + rnd() * 20, 10 + rnd() * 18, 48 + rnd() * 28, .8); x.beginPath(); x.ellipse(rnd() * W, rnd() * W, .8 + rnd() * 2, .6 + rnd() * 1.4, rnd() * 3, 0, Math.PI * 2); x.fill(); }
+  }), 2, 2);
+}
+
+// Weathered limestone cliff. One tile is 8 units square.
+export function rock() {
+  return tiled(canvasTex(256, 256, (x, W) => {
+    const rnd = seeded(83);
+    x.fillStyle = '#8a7d6b'; x.fillRect(0, 0, W, W);
+    for (let k = 0; k < 90; k++) { x.fillStyle = hsl(32, 10 + rnd() * 10, 38 + rnd() * 26, .35); x.beginPath(); x.ellipse(rnd() * W, rnd() * W, 8 + rnd() * 30, 3 + rnd() * 10, (rnd() - .5) * .5, 0, Math.PI * 2); x.fill(); }
+    x.strokeStyle = 'rgba(40,32,26,.35)'; x.lineWidth = 1.5;
+    for (let k = 0; k < 26; k++) { x.beginPath(); let px = rnd() * W, py = rnd() * W; x.moveTo(px, py); for (let q = 0; q < 4; q++) { px += (rnd() - .5) * 50; py += rnd() * 30; x.lineTo(px, py); } x.stroke(); }
+  }), 8, 8);
 }
 
 // Clipped boxwood and yew: dense small leaves. One tile is 1.5 units square.

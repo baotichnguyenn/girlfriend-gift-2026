@@ -52,6 +52,41 @@ function daisyGeo(petals) { // flat petals in white around a yellow centre; vert
   g.computeVertexNormals();
   return g;
 }
+// Rings of petals round a centre, as one geometry with vertex colours: petals pale at the tips, shaded toward the middle.
+// Each ring is [count, start radius, length, half-width, base tilt, tip tilt, shade, turn], tilts in radians above level.
+// centre is [radius, height, r, g, b] for a small cone in the middle.
+function petalRings(rings, centre) {
+  const pos = [], col = [];
+  const P = (r, y, c, s, px, pz, w) => [c * r + px * w, y, s * r + pz * w];
+  for (const [n, r0, len, w, t0, t1, shade, turn = 0] of rings) for (let k = 0; k < n; k++) {
+    const a = (k + turn) / n * Math.PI * 2, c = Math.cos(a), s = Math.sin(a), px = -s, pz = c;
+    const r1 = r0 + Math.cos(t0) * len * .5, y1 = .01 + Math.sin(t0) * len * .5;
+    const r2 = r1 + Math.cos(t1) * len * .5, y2 = y1 + Math.sin(t1) * len * .5;
+    const b = P(r0, .01, c, s, px, pz, 0), m1 = P(r1, y1, c, s, px, pz, w), m2 = P(r1, y1, c, s, px, pz, -w), tip = P(r2, y2, c, s, px, pz, 0);
+    pos.push(...b, ...m1, ...tip, ...b, ...tip, ...m2);
+    const i = shade * .8;
+    col.push(i, i, i, shade, shade, shade, shade, shade, shade, i, i, i, shade, shade, shade, shade, shade, shade);
+  }
+  if (centre) {
+    const [r, h, cr, cg, cb] = centre;
+    for (let k = 0; k < 6; k++) {
+      const a0 = k / 6 * Math.PI * 2, a1 = (k + 1) / 6 * Math.PI * 2;
+      pos.push(0, h, 0, Math.cos(a1) * r, h * .4, Math.sin(a1) * r, Math.cos(a0) * r, h * .4, Math.sin(a0) * r);
+      for (let v = 0; v < 3; v++) col.push(cr, cg, cb);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.computeVertexNormals();
+  return g;
+}
+// A tall flower spike, like foxglove, delphinium, or lupin: a tapering column of little bells.
+function spikeGeo() {
+  const pts = [];
+  for (let y = 0; y <= .7; y += .035) pts.push(new THREE.Vector2(.055 * Math.pow(1 - y / .74, .8) * (.7 + .3 * Math.abs(Math.sin(y * 45))) + .002, y));
+  pts.push(new THREE.Vector2(.001, .73));
+  return new THREE.LatheGeometry(pts, 7);
+}
 function leafGeo() {
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, .05, .09, .01, 0, .22, 0, 0, 0, 0, 0, .22, 0, -.05, .09, .01], 3));
@@ -69,7 +104,15 @@ export const GEO = {
   hydrangea: new THREE.IcosahedronGeometry(.17, 1),
   leaf: leafGeo(),
   bush: new THREE.IcosahedronGeometry(.36, 1),
-  blossom: new THREE.SphereGeometry(.5, 9, 6)
+  blossom: new THREE.SphereGeometry(.5, 9, 6),
+  // garden roses: open and cupped, darker at the heart
+  cuprose: petalRings([[8, .02, .085, .03, .55, 1.1, 1], [7, .012, .07, .028, .95, 1.35, .95, .5], [5, .004, .05, .024, 1.25, 1.5, .85, .25]], [.022, .05, .8, .62, .62]),
+  dahlia: petalRings([[16, .03, .14, .026, .2, .05, 1], [14, .02, .12, .025, .45, .3, .97, .5], [12, .012, .1, .023, .75, .6, .93, .25], [9, .006, .075, .02, 1.05, .95, .87, .7], [6, 0, .05, .016, 1.35, 1.3, .8, .3]], [.02, .06, .78, .7, .5]),
+  lily: petalRings([[3, .008, .2, .04, 1.05, .35, 1], [3, .008, .19, .036, 1.15, .45, .96, .5]], [.016, .06, .7, .8, .4]),
+  iris: petalRings([[3, .006, .13, .042, 1.35, 1.0, 1], [3, .01, .15, .046, .5, -.7, .78, .5]], [.012, .04, 1, .85, .3]),
+  waterlily: petalRings([[10, .02, .11, .03, .3, .15, 1], [8, .015, .085, .026, .7, .55, .97, .5], [6, .008, .06, .022, 1.05, .9, .93, .25]], [.026, .045, 1, .82, .3]),
+  pad: new THREE.CircleGeometry(.3, 14, .35, Math.PI * 2 - .35).rotateX(-Math.PI / 2),
+  spike: spikeGeo()
 };
 
 // One collector per place (the urns, the garden). add() records instances; build() makes the meshes.
@@ -77,14 +120,16 @@ export function flora(parent, sway) {
   const mats = {
     petal: floraMaterial({ side: THREE.DoubleSide }, sway),
     facet: floraMaterial({ flatShading: true }, sway),
-    daisy: floraMaterial({ side: THREE.DoubleSide, vertexColors: true }, sway),
+    petals: floraMaterial({ side: THREE.DoubleSide, vertexColors: true }, sway),
     green: floraMaterial({ color: lin(0x4f7a3a), side: THREE.DoubleSide, roughness: .8 }, sway),
     bush: floraMaterial({ flatShading: true, roughness: .9 }, false),
     soft: floraMaterial({ roughness: .85 }, false)
   };
   const kinds = {
-    stem: ['stem', 'green'], tulip: ['tulip', 'petal'], rose: ['rose', 'facet'], peony: ['peony', 'facet'], daisy: ['daisy', 'daisy'],
-    lavender: ['lavender', 'facet'], hydrangea: ['hydrangea', 'facet'], leaf: ['leaf', 'green'], bush: ['bush', 'bush'], blossom: ['blossom', 'soft']
+    stem: ['stem', 'green'], tulip: ['tulip', 'petal'], rose: ['rose', 'facet'], peony: ['peony', 'facet'], daisy: ['daisy', 'petals'],
+    lavender: ['lavender', 'facet'], hydrangea: ['hydrangea', 'facet'], leaf: ['leaf', 'green'], bush: ['bush', 'bush'], blossom: ['blossom', 'soft'],
+    cuprose: ['cuprose', 'petals'], dahlia: ['dahlia', 'petals'], lily: ['lily', 'petals'], iris: ['iris', 'petals'], waterlily: ['waterlily', 'petals'],
+    pad: ['pad', 'green'], spike: ['spike', 'facet']
   };
   const items = {}; Object.keys(kinds).forEach((k) => { items[k] = []; });
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), p = new THREE.Vector3(), s = new THREE.Vector3(), c = new THREE.Color();

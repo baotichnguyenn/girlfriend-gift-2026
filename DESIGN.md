@@ -10,7 +10,7 @@ No name, logo, or branding of a real museum appears on the page.
 The museum is the reason the order feels natural rather than forced.
 Velvet ropes, gallery lights, numbered exhibits, and placards all say "this way, one at a time".
 Her own photographs hang on the gallery walls.
-When the last letter is read, the doors at the end open onto a flower garden at dawn, where her portrait waits.
+When the last letter is read, the doors at the end open onto a French flower garden on a clifftop at dawn, with mountains beyond, where her portrait waits under an arch of roses.
 
 The structure follows asklex.law/journey: a loader, an intro statement, then a guided 3D walk.
 She walks the figure with the arrow keys or the on-screen arrows, and looks around the space with the mouse or a finger.
@@ -31,7 +31,7 @@ A chapter HUD shows a counter, the current gallery, and a progress rail.
 6. **Unlock.** The rope barrier swings open. The next gallery's light comes up. The brass marker moves to the next frame.
 7. **The garden.** After letter V, the marker moves to the tall doors at the end of the last gallery.
    As she nears them, they swing open and dawn comes up: the sky, the skylights, and the light all warm from night to sunrise.
-   The path continues down a flagstone walk to a round terrace, where her portrait stands on an easel under a rose arbour.
+   The path continues down a gravel allée lined with flowers to an arch covered in roses, where her portrait stands on an easel, with the mountains behind it.
    The finale card reads "The last exhibit is you."
 
 ## Palette
@@ -67,7 +67,9 @@ Scene colours, set in the modules under `js/world/`:
 | Chandeliers | Gilt bronze (the frame gold), cut crystal `#fdfaf4`, wax `#f4ecdb`, candlelight `#ffc98f` |
 | Light beams | `#ffd9a0`, additive |
 | Night fog / dawn haze | `#0e0b12` / `#f0cdb6` |
-| Garden | Lawn, flagstones, clipped box and yew, tulips, roses, lavender, cosmos, hydrangeas, cherry blossom |
+| Garden | Lawn, raked gravel `#cdbfa6`, limestone balustrade, treillage green `#2f4a3c`, water `#7f9fb0` |
+| Arch flowers | Blush, pink, white, and cream roses and peonies with a few deep pinks (`ARCH` in `garden.js`) |
+| Mountains | Five ridges from `#454f4c` (near) to `#ccbfd1` (far), fading into a warm mist |
 | Figure skin / shoes | `#f0c6a6` / `#2a1a1f` |
 | Figure dress | `CONFIG.dress`, default `#b8576b` |
 
@@ -141,12 +143,19 @@ One unit is about 0.75 m. The numbers that place everything are in `js/layout.js
 - **Figure:** a chibi body built from primitives, about 2.1 units tall.
   The head is a camera-facing sprite: her photo cropped to a circle with a brass ring.
   Without a photo, a drawn placeholder face is used.
-- **Garden:** past the doors, enclosed by tall yew hedges, under a dawn sky with the sun low ahead.
-  A flagstone walk lined with box hedges and topiary cones leads to a round terrace ringed with rose bushes.
-  Tulips grow in colour drifts beside the walk, lavender in rows to the sides, cosmos and daisies in a meadow behind, and hydrangeas against the yew.
-  Seven cherry trees are in blossom, and petals drift down.
-  Her portrait stands on an easel under a rose arbour, lit only after all five letters are read.
-  The garden is hidden until the doors start to open.
+- **Garden:** a terrace on a clifftop, 52 units wide and 37 deep, inspired by the rose garden at Bagatelle, the water lilies at Giverny, and a cottage dahlia garden.
+  - A limestone balustrade with urns runs along the cliff edge. Below it, rock falls away into misty valleys.
+    Beyond, five layers of mountain ridges fade into haze, nearer ones darker, with the sun just above the peaks.
+    The ridges are painted by the sky dome's shader, which follows the camera.
+  - A gravel allée runs from the doors to the flower arch. Box hedges and topiary cones line its first stretch; mounds of roses, peonies, and hydrangeas line the rest, like a wedding aisle.
+  - The arch is a square frame covered in roses, peonies, hydrangea, and greenery, fullest at its top corners and spilling at its feet. Her portrait stands on an easel inside it, with the mountains behind.
+  - Front left: a round water-lily basin with a limestone rim, ringed by lavender.
+  - Front right: lilies (white, blush, stargazer pink, orange, yellow) and irises in drifts.
+  - Back left: a rose parterre of four curved beds in pinks, reds, and whites, round a green trellis rotunda covered in climbing roses.
+  - Back right: a cottage garden of dahlias, foxgloves and delphiniums, cosmos, and roses, round a pergola hung with wisteria.
+  - Hydrangeas line the museum's garden front, lavender lines the side balustrades, two cherry trees blossom in the front corners, and cypresses frame the view at the back.
+  - Butterflies wander over the beds, and petals drift down the allée.
+  - Her portrait is lit only after all five letters are read. The garden is hidden until the doors start to open.
 
 ## Camera
 
@@ -156,7 +165,7 @@ Four rigs, blended by how close she is to each station, then exponentially dampe
 - **Follow:** behind and slightly to one side, looking ahead along the path.
 - **Station:** on the far side of the path from the exhibit, framing her in the foreground and the frame behind.
   Blend weight ramps from 0 at 3.6 units away to 1 at 0.4 units.
-- **Finale:** behind her on the garden terrace, looking at the portrait under the arbour.
+- **Finale:** behind her at the end of the allée, looking through the flower arch at the portrait and the mountains.
 
 Looking around sits on top of whichever rig is active:
 
@@ -179,8 +188,8 @@ During the intro-to-walk transition, the camera arcs sideways so it never passes
 - On the intro she waves every few seconds to invite a click. She also waves when clicked during the walk.
 - Rope opening, light changes, and overlays all ease over 0.4–0.8 s.
 - The garden doors swing open over about 2 s. Dawn takes about 5 s to come up.
-- Flowers sway in a light wind, and petals drift down in the garden.
-- Reduced motion: no chevron flow, pulsing, dust drift, marker bob, swaying flowers, falling petals, flickering candles, or glinting crystal. Overlays switch instantly, the doors open at once, and dawn comes up at once.
+- Flowers sway in a light wind, petals drift down, and butterflies flit over the beds.
+- Reduced motion: no chevron flow, pulsing, dust drift, marker bob, swaying flowers, falling petals, butterflies, flickering candles, or glinting crystal. Overlays switch instantly, the doors open at once, and dawn comes up at once.
 
 ## Copy voice
 

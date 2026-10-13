@@ -25,6 +25,9 @@ export const CHANDELIERS = [{ z: (FRONT_Z + PARTITION_Z[0]) / 2, y: 7.05, s: 1.3
 // Fabric wall colour for each gallery, like the painting galleries of a great museum.
 export const GALLERY_COLORS = [0x7a2b31, 0x40594b, 0x34495f, 0x5a3048, 0x8a5236];
 
-// The garden beyond the doors. The path ends at END_Z; her portrait stands on the terrace past it.
-export const END_Z = DOOR_Z - 13.5;
-export const TERRACE_Z = END_Z - 3.9;
+// The garden beyond the doors: a clifftop terrace, GARDEN_W either side of the middle, ending at CLIFF_Z.
+// The path ends at END_Z; her portrait stands under the flower arch at ARCH_Z, with the mountains behind.
+export const END_Z = DOOR_Z - 25;
+export const ARCH_Z = END_Z - 3.9;
+export const CLIFF_Z = ARCH_Z - 9;
+export const GARDEN_W = 26;

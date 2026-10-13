@@ -58,6 +58,7 @@ async def main() -> int:
         async def new_page(**ctx_opts):
             ctx = await browser.new_context(**ctx_opts)
             page = await ctx.new_page()
+            page.set_default_timeout(SLOW)  # screenshots wait for a frame, and software frames can take many seconds
             page.on("pageerror", lambda e: errors.append(str(e)))
             local = os.environ.get("THREE_LOCAL")
             if local:

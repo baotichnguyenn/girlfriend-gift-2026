@@ -5,7 +5,7 @@
 A single-page 3D experience built as a private gift.
 A small figure of Bao's girlfriend walks a brass path through a museum at night, styled after a great museum's Great Hall and painting galleries.
 Her photos hang on the gallery walls. Five letters stand along the path, and she must open them in a fixed order.
-After the last letter, doors open onto a flower garden at dawn, where her portrait waits.
+After the last letter, doors open onto a French flower garden on a clifftop at dawn, with mountains beyond. Her portrait waits there under an arch of roses.
 The format follows the chapter style of asklex.law/journey.
 She walks the figure with the arrow keys or the on-screen arrows, and looks around with the mouse or a finger.
 
@@ -79,13 +79,13 @@ To change the count, update:
 | `world/chandeliers.js` | A Louis XV crystal chandelier in each room, all sharing a few draw calls, and the two lights that follow her to the nearest ones. |
 | `world/photos.js` | The 30 photo frames, their labels and wall washes, and `loadPhotos()`. |
 | `world/frames.js` | `frameGeo()`: a gilded frame around any opening. Used by the photos and the letters. |
-| `world/flora.js` | Flower geometry, a wind-sway shader, the instanced `flora()` collector, `plant()`, and `urn()`. |
+| `world/flora.js` | Flower geometry (roses, peonies, dahlias, lilies, irises, water lilies, flower spikes, lavender, hydrangeas, and more, mostly built by `petalRings()`), a wind-sway shader, the instanced `flora()` collector, `plant()`, and `urn()`. |
 | `world/ribbon.js` | The path ribbon shader: walked, open to the gate, locked. |
 | `world/exhibits.js` | The five letter piers, the portrait on its easel, spotlights, and the marker. Owns `EX`, `fin`, and `VIEW`. |
 | `world/ropes.js` | Stanchions, rope lines, and the barrier past each letter. |
 | `world/doors.js` | The garden doors. They open once `readCount` is 5 and she comes near. |
-| `world/sky.js` | Lights, the sky dome, and the night-to-dawn change that follows the doors. |
-| `world/garden.js` | The garden, the falling petals, and the switch that hides it all until the doors open. |
+| `world/sky.js` | Lights, the sky dome, and the night-to-dawn change that follows the doors. The dome's shader also paints the mountain ridges and valley mist, and the dome follows the camera. |
+| `world/garden.js` | The clifftop garden: allées, the flower arch, balustrade and cliff, the water-lily basin, the rose parterre and trellis rotunda, the cottage beds and pergola, trees, petals, butterflies, and the switch that hides it all until the doors open. |
 | `world/her.js` | Her figure, her fill light, and `updateHer()`: movement toward `sTarget`, the plinth hop, walk cycle, waving, facing. |
 | `ui/dom.js` | `ui` element map, `toast()`, `fail()`, `fillBody()`, `applyCopy()`, `BootError`. |
 | `ui/hud.js` | `enter()`, seals, chapter block, progress rail, station prompt. |
@@ -193,7 +193,7 @@ Manual checks before sharing a new version:
 - Dragging turns the view without moving her. Walking swings it back behind her. Double-click resets it.
 - The on-screen arrows walk her while held, on a phone and with a mouse.
 - Breaking the seal opens the letter. Closing it swings the rope open and lights the next gallery.
-- After letter V, the doors open, dawn comes up, and the finale appears on the garden terrace.
+- After letter V, the doors open, dawn comes up, and the finale appears at the flower arch, with the mountains behind.
 - Photos from `displayed photos/` hang in order, and frames fit their shape.
 - At 390 px wide, she stays in frame while walking and at each letter.
 - The published artifact gets past the loader. A module file missing from the publish stops it there.

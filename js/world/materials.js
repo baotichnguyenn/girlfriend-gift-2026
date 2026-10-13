@@ -1,6 +1,6 @@
 // Materials shared across the museum and the garden. createMaterials() fills M once, from buildWorld().
 import { GALLERY_COLORS } from '../layout.js';
-import { parquet, slabs, ashlar, damask, laylight, wash, grass, flagstone, foliage } from '../paint/surfaces.js';
+import { parquet, slabs, ashlar, damask, laylight, wash, grass, foliage, gravel, rock } from '../paint/surfaces.js';
 
 // Colours below are written as they should look, so convert them to the renderer's linear space.
 const lin = (hex) => new THREE.Color(hex).convertSRGBToLinear();
@@ -30,8 +30,11 @@ export function createMaterials() {
   M.laylight = new THREE.MeshBasicMaterial({ map: laylight(), color: 0x1d2742, toneMapped: false });
   M.wash = new THREE.MeshBasicMaterial({ map: wash(), transparent: true, opacity: .5, depthWrite: false, blending: THREE.AdditiveBlending });
   M.grass = std({ map: grass(), roughness: 1, envMapIntensity: .2 });
-  M.flagstone = std({ map: flagstone(), roughness: .9, envMapIntensity: .25 });
   M.hedge = std({ map: foliage(), roughness: .95, envMapIntensity: .2 });
   M.bark = std({ color: 0x4a3328, roughness: .9, envMapIntensity: .2 });
+  M.gravel = std({ map: gravel(), roughness: .95, envMapIntensity: .2 });
+  M.rock = std({ map: rock(), roughness: .95, envMapIntensity: .2, side: THREE.DoubleSide });
+  M.trellis = std({ color: lin(0x2f4a3c), roughness: .6, envMapIntensity: .3 }); // French treillage green
+  M.water = std({ color: lin(0x7f9fb0), roughness: .08, metalness: .4, envMapIntensity: .7 });
   return M;
 }
