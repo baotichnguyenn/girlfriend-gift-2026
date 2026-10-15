@@ -111,6 +111,8 @@ export const GEO = {
   lily: petalRings([[3, .008, .2, .04, 1.05, .35, 1], [3, .008, .19, .036, 1.15, .45, .96, .5]], [.016, .06, .7, .8, .4]),
   iris: petalRings([[3, .006, .13, .042, 1.35, 1.0, 1], [3, .01, .15, .046, .5, -.7, .78, .5]], [.012, .04, 1, .85, .3]),
   waterlily: petalRings([[10, .02, .11, .03, .3, .15, 1], [8, .015, .085, .026, .7, .55, .97, .5], [6, .008, .06, .022, 1.05, .9, .93, .25]], [.026, .045, 1, .82, .3]),
+  // field poppies, the coquelicot: four broad, papery petals round a dark centre
+  poppy: petalRings([[4, .01, .13, .065, .55, .95, 1], [4, .008, .1, .055, .85, 1.2, .94, .5]], [.026, .035, .2, .16, .2]),
   pad: new THREE.CircleGeometry(.3, 14, .35, Math.PI * 2 - .35).rotateX(-Math.PI / 2),
   spike: spikeGeo()
 };
@@ -129,7 +131,7 @@ export function flora(parent, sway) {
     stem: ['stem', 'green'], tulip: ['tulip', 'petal'], rose: ['rose', 'facet'], peony: ['peony', 'facet'], daisy: ['daisy', 'petals'],
     lavender: ['lavender', 'facet'], hydrangea: ['hydrangea', 'facet'], leaf: ['leaf', 'green'], bush: ['bush', 'bush'], blossom: ['blossom', 'soft'],
     cuprose: ['cuprose', 'petals'], dahlia: ['dahlia', 'petals'], lily: ['lily', 'petals'], iris: ['iris', 'petals'], waterlily: ['waterlily', 'petals'],
-    pad: ['pad', 'green'], spike: ['spike', 'facet']
+    pad: ['pad', 'green'], spike: ['spike', 'facet'], poppy: ['poppy', 'petals']
   };
   const items = {}; Object.keys(kinds).forEach((k) => { items[k] = []; });
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), p = new THREE.Vector3(), s = new THREE.Vector3(), c = new THREE.Color();

@@ -2,6 +2,7 @@
 // A gravel allée lined with flowers leads to a flower-covered arch, where her portrait stands.
 // Left of the allée: a water-lily basin, then a rose parterre round a green trellis rotunda.
 // Right: lilies and irises, then a cottage garden of dahlias, foxgloves, and cosmos round a wisteria pergola.
+// Flat layers (lawn, leafy ground, gravel) never overlap at the same depth: see the layer materials in materials.js.
 // A stone balustrade runs along the cliff edge. Everything here stays hidden until the doors start to open.
 import { seeded, reduceMotion } from '../util.js';
 import { state } from '../state.js';
@@ -37,6 +38,9 @@ const HYDRANGEA = [0x9db8e8, 0xb9a7e6, 0xf4f1ea, 0x8fa9e0];
 const BLOSSOM = [0xf6bccb, 0xf2a6ba, 0xf9d3de, 0xfbe6ec, 0xeb92aa];
 const WISTERIA = [0xb7a2e8, 0xc9b6f0, 0x9f86d8, 0xe9e1f7];
 const LAVENDER = [0x8f7ad6, 0xa58be0];
+const POPPY = [0xe2412f, 0xef6a3a, 0xf28aa0, 0xffffff, 0xf6a04d];
+const TULIP = [0xf4a7b9, 0xffffff, 0xf26b7a, 0xffc9a8, 0xd94861, 0xfde3e8];
+const GARLAND = [0xfbe4e4, 0xf7cdd2, 0xffffff, 0xf4b6c2, 0xe2708f];
 
 const pick = (arr, rnd) => arr[Math.floor(rnd() * arr.length)];
 // Points on a jittered grid inside [x0, x1] × [z0, z1] that pass keep(x, z).
@@ -57,20 +61,30 @@ function outward(rnd, up) {
 export function buildGarden() {
   scene.add(garden);
   const rnd = seeded(77), f = flora(garden, true);
-  const out = new Map([[M.grass, []], [M.gravel, []], [M.hedge, []], [M.bark, []], [M.limestone, []], [M.bronze, []], [M.trellis, []], [M.rock, []], [M.water, []]]);
+  const out = new Map([[M.grass, []], [M.ground, []], [M.gravel, []], [M.gravelTop, []], [M.hedge, []], [M.bark, []], [M.limestone, []], [M.bronze, []], [M.trellis, []], [M.rock, []], [M.water, []]]);
   const add = (mat, g) => out.get(mat).push(g);
   const flat = (w, d, x, z, y) => plane(w, d).rotateX(-Math.PI / 2).translate(x, y, z);
   const ellipse = (ra, rb, x, z, y) => { const g = new THREE.CircleGeometry(1, 32).rotateX(-Math.PI / 2).scale(ra, 1, rb).translate(x, y, z), uv = g.attributes.uv, ps = g.attributes.position; for (let i = 0; i < uv.count; i++) uv.setXY(i, ps.getX(i), -ps.getZ(i)); return g; };
   const disc = (r, x, z, y) => { const g = new THREE.CircleGeometry(r, 40), uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * r * 2, uv.getY(i) * r * 2); return g.rotateX(-Math.PI / 2).translate(x, y, z); };
+  // a clipped box hedge with a rounded top, w wide and h tall, running along z from z0 to z1
+  const hedgeRow = (x, z0, z1, w, h) => {
+    const len = Math.abs(z0 - z1), zc = (z0 + z1) / 2, r = w / 2;
+    add(M.hedge, box(w, h - r, len, x, (h - r) / 2, zc));
+    const top = new THREE.CylinderGeometry(r, r, len, 10, 1, false, 0, Math.PI), uv = top.attributes.uv;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * Math.PI * r, uv.getY(i) * len);
+    add(M.hedge, top.rotateX(Math.PI / 2).rotateZ(Math.PI / 2).translate(x, h - r, zc));
+  };
+  // a flower bed: leafy ground under it, and fn(x, z) for each planting spot
+  const bed = (x0, x1, z0, z1, step, keep, fn) => { add(M.ground, flat(x1 - x0, z1 - z0, (x0 + x1) / 2, (z0 + z1) / 2, .008)); scatter(x0 + .2, x1 - .2, z0 + .2, z1 - .2, step, rnd, keep, fn); };
   const lavender = (x, z, h) => { f.add('stem', { x, z, sy: h, rx: (rnd() - .5) * .2, ry: rnd() * 6 }); f.add('lavender', { x, y: h - .02, z, s: 1 + rnd() * .3, color: pick(LAVENDER, rnd) }); };
 
   /* ---------- ground: lawn on the clifftop, gravel allées, and rock falling away below ---------- */
   add(M.grass, flat(GW * 2, EDGE_Z - CLIFF_Z, 0, (EDGE_Z + CLIFF_Z) / 2, 0));
   add(M.gravel, flat(18, 4, 0, EDGE_Z - 2, .013));                                        // forecourt
-  const alleeEnd = ARCH_Z + 2.4;
+  const alleeEnd = ARCH_Z + 2.5;
   add(M.gravel, flat(3.4, EDGE_Z - 4 - alleeEnd, 0, (EDGE_Z - 4 + alleeEnd) / 2, .012));  // the allée
-  add(M.gravel, flat(GW * 2 - 4, 2.4, 0, CROSS_Z, .011));                                 // the cross allée
-  add(M.gravel, flat(7.6, 5, 0, ARCH_Z, .014));                                           // under the arch
+  for (const sx of [-1, 1]) add(M.gravel, flat(GW - 3.7, 2.4, sx * (1.7 + (GW - 3.7) / 2), CROSS_Z, .012)); // the cross allée, either side
+  add(M.gravelTop, flat(7.6, 5, 0, ARCH_Z, .014));                                        // under the arch
   add(M.limestone, box(4.6, .05, 1.4, 0, .025, EDGE_Z - .7));                            // threshold slab
   // the rock face, sloping steeply down and out from every open edge
   const skirt = (ax, az, bx, bz, ox, oz) => {
@@ -89,7 +103,7 @@ export function buildGarden() {
 
   /* ---------- a stone balustrade along the cliff, with urns on some of its piers ---------- */
   const BALUSTER = [[.001, 0], [.09, 0], [.09, .04], [.05, .08], [.045, .14], [.08, .26], [.1, .34], [.08, .42], [.04, .52], [.035, .62], [.06, .68], [.07, .72], [.07, .78], [.001, .78]];
-  const balusters = [], urnSpots = [];
+  const balusters = [], urnSpots = [], garlands = [];
   const balustrade = (x0, z0, x1, z1, urnsAt) => {
     const len = Math.hypot(x1 - x0, z1 - z0), ux = (x1 - x0) / len, uz = (z1 - z0) / len, ry = Math.atan2(-uz, ux), piers = Math.ceil(len / 6.5);
     add(M.limestone, box(len, .18, .6, (x0 + x1) / 2, .09, (z0 + z1) / 2, ry));
@@ -99,6 +113,7 @@ export function buildGarden() {
       add(M.limestone, box(.7, 1.22, .7, px, .61, pz)); add(M.limestone, box(.84, .1, .84, px, 1.27, pz));
       if (urnsAt.includes(p) || (urnsAt.includes(-1) && p === piers)) urnSpots.push([px, pz]);
       if (p < piers) for (let b = .62; b < len / piers - .4; b += .36) balusters.push([px + ux * b, pz + uz * b]);
+      if (p < piers) for (let b = 1.3; b < len / piers - 1; b += 2.6) garlands.push([px + ux * b, pz + uz * b, ux, uz]);
     }
   };
   balustrade(-GW, CLIFF_Z + .4, GW, CLIFF_Z + .4, [0, -1]);
@@ -110,6 +125,12 @@ export function buildGarden() {
   balusters.forEach(([x, z], k) => bim.setMatrixAt(k, m4.makeTranslation(x, .18, z)));
   bim.frustumCulled = false; // r128 culls instanced meshes by the base geometry's bounds
   garden.add(bim);
+  garlands.forEach(([gx, gz, ux, uz]) => {
+    for (let k = 0; k < 9; k++) {
+      const a = (rnd() - .5) * 1.1, n = outward(rnd, .5), rose = k % 3 !== 0;
+      f.add(rose ? 'cuprose' : 'leaf', facing(gx + ux * a + uz * (rnd() - .5) * .3, 1.12 - Math.abs(a) * .2 * (1 - Math.abs(a)) - rnd() * .12, gz + uz * a - ux * (rnd() - .5) * .3, n, rose ? 1.1 + rnd() * .4 : 1.1, rose ? pick(GARLAND, rnd) : 0xffffff));
+    }
+  });
   const URN = [[.001, 0], [.16, 0], [.16, .06], [.08, .12], [.07, .22], [.2, .36], [.3, .56], [.32, .68], [.26, .74], [.34, .8], [.001, .8]];
   urnSpots.forEach(([x, z]) => {
     add(M.limestone, new THREE.LatheGeometry(URN.map(([r, y]) => new THREE.Vector2(r, y)), 16).translate(x, 1.32, z));
@@ -144,12 +165,12 @@ export function buildGarden() {
   };
   for (const sx of [-1, 1]) {
     mound(sx * (AX + .25), AZ + .35, 1.0, .9, 95, sx * .6);
-    for (let z = CROSS_Z - 2; z > alleeEnd + .6; z -= 2.5) mound(sx * 2.25, z, .62, .62, 30, 0);
+    for (let z = CROSS_Z - 2; z > alleeEnd + .6; z -= 2) mound(sx * 2.25, z, .62, .62, 36, 0);
   }
 
   /* ---------- the front: hydrangeas under the facade, box hedges and topiary by the allée, lavender by the balustrade ---------- */
   for (const sx of [-1, 1]) {
-    add(M.hedge, box(.45, .48, CROSS_Z + 1.4 - (EDGE_Z - 4.2), sx * 1.95, .24, (CROSS_Z + 1.4 + EDGE_Z - 4.2) / 2));
+    hedgeRow(sx * 1.95, EDGE_Z - 4.2, CROSS_Z + 1.4, .45, .55);
     for (const cz of [EDGE_Z - 1.2, CROSS_Z + 1.9, CROSS_Z - 1.9]) {
       add(M.hedge, new THREE.ConeGeometry(.55, 1.8, 10).translate(sx * 2.7, 1.2, cz)); add(M.limestone, box(.8, .3, .8, sx * 2.7, .15, cz));
     }
@@ -169,14 +190,14 @@ export function buildGarden() {
   add(M.limestone, new THREE.TorusGeometry(PR + .16, .17, 6, 48).rotateX(Math.PI / 2).scale(1, .55, 1).translate(PX, .2, PZ));
   for (let k = 0; k < 46; k++) {
     const a = rnd() * 6.28, r = Math.sqrt(rnd()) * (PR - .35), x = PX + Math.cos(a) * r, z = PZ + Math.sin(a) * r;
-    f.add('pad', { x, y: .08, z, s: .7 + rnd() * .6, ry: rnd() * 6.28, color: pick([0xffffff, 0xd8ecc0, 0xc4dca8], rnd) });
-    if (k % 3 === 0) f.add('waterlily', { x: x + .05, y: .085, z: z + .05, s: 1 + rnd() * .4, ry: rnd() * 6, color: pick([0xffffff, 0xf7c4d4, 0xe8709c, 0xfff0d0], rnd) });
+    f.add('pad', { x, y: .095, z, s: .7 + rnd() * .6, ry: rnd() * 6.28, color: pick([0xffffff, 0xd8ecc0, 0xc4dca8], rnd) });
+    if (k % 3 === 0) f.add('waterlily', { x: x + .05, y: .1, z: z + .05, s: 1 + rnd() * .4, ry: rnd() * 6, color: pick([0xffffff, 0xf7c4d4, 0xe8709c, 0xfff0d0], rnd) });
   }
   for (let k = 0; k < 44; k++) { const a = k / 44 * 6.28, r = PR + .9 + rnd() * .25; lavender(PX + Math.cos(a) * r, PZ + Math.sin(a) * r, .42 + rnd() * .2); }
 
   /* ---------- front right: lilies and irises in drifts ---------- */
-  add(M.hedge, flat(GW - 3 - 3.6, (EDGE_Z - 4.4) - (CROSS_Z + 1.8), (GW - 3 + 3.6) / 2, (EDGE_Z - 4.4 + CROSS_Z + 1.8) / 2, .008));
-  scatter(3.8, GW - 3, CROSS_Z + 1.8, EDGE_Z - 4.4, .5, rnd, (x) => !nearLavender(x), (x, z) => {
+  add(M.ground, flat(GW - 3 - 3.6, (EDGE_Z - 4.4) - (CROSS_Z + 1.8), (GW - 3 + 3.6) / 2, (EDGE_Z - 4.4 + CROSS_Z + 1.8) / 2, .008));
+  scatter(3.8, GW - 3, CROSS_Z + 1.8, EDGE_Z - 4.4, .44, rnd, (x) => !nearLavender(x), (x, z) => {
     const band = Math.floor(x / 3.2) + Math.floor(-z / 3);
     if (band % 3 === 0) { // irises, the fleur-de-lis, in clumps
       plant(f, 'iris', x, z, .62 + rnd() * .2, IRIS[(band + 1) % IRIS.length], rnd, 1.2);
@@ -194,17 +215,23 @@ export function buildGarden() {
 
   /* ---------- back left: a rose parterre round a green trellis rotunda ---------- */
   const RX = -16.5, RZ = CROSS_Z - 10.5, RR = 2.4, RH = 3.4;
-  add(M.gravel, disc(RR + 1.2, RX, RZ, .015));
+  add(M.gravelTop, disc(RR + 1.2, RX, RZ, .015));
   add(M.gravel, flat(2, (CROSS_Z - 1.2) - (RZ + RR + 1), RX, (CROSS_Z - 1.2 + RZ + RR + 1) / 2, .015));
   const BEDS = [[-8.2, CROSS_Z - 5.4, 3.9, 2.4], [-21.2, CROSS_Z - 4.4, 2.6, 2.2], [-8.6, CROSS_Z - 15.2, 4.3, 2.6], [-20.4, CROSS_Z - 16.6, 2.6, 2.4]];
   BEDS.forEach(([bx, bz, ra, rb], bi) => {
-    add(M.hedge, ellipse(ra + .3, rb + .3, bx, bz, .008));
-    scatter(bx - ra, bx + ra, bz - rb, bz + rb, .9, rnd, (x, z) => ((x - bx) / ra) ** 2 + ((z - bz) / rb) ** 2 < 1, (x, z) => {
+    add(M.ground, ellipse(ra + .3, rb + .3, bx, bz, .008));
+    scatter(bx - ra, bx + ra, bz - rb, bz + rb, .8, rnd, (x, z) => ((x - bx) / ra) ** 2 + ((z - bz) / rb) ** 2 < 1, (x, z) => {
       const s = .62 + rnd() * .25;
       f.add('bush', { x, y: .3 * s, z, s, ry: rnd() * 6, color: 0x3f6b35 });
       for (let j = 0; j < 11; j++) { const n = outward(rnd, .5); f.add('cuprose', facing(x + n.x * .4 * s, .3 * s + n.y * .38 * s, z + n.z * .4 * s, n, 1.4 + rnd() * .5, pick(ROSE_BEDS[bi], rnd))); }
     });
   });
+  for (let k = 0; k < 18; k++) {
+    const a = k / 18 * Math.PI * 2; if (Math.sin(a) > .85) continue; // leave the path in
+    const x = RX + Math.cos(a) * (RR + 1.75), z = RZ + Math.sin(a) * (RR + 1.75), s = .6 + rnd() * .2;
+    f.add('bush', { x, y: .3 * s, z, s, ry: rnd() * 6, color: 0x3f6b35 });
+    for (let j = 0; j < 10; j++) { const n = outward(rnd, .5); f.add('cuprose', facing(x + n.x * .4 * s, .3 * s + n.y * .38 * s, z + n.z * .4 * s, n, 1.4 + rnd() * .4, pick([0xffffff, 0xfdf0e6, 0xf9e1e4], rnd))); }
+  }
   // the rotunda: eight posts, a ring, a ribbed dome, lattice in seven bays, and roses climbing it all
   const trellis = [], climbers = [];
   const dome = (t) => [RR * Math.cos(t * Math.PI / 2), RH + 2.1 * Math.sin(t * Math.PI / 2)];
@@ -235,7 +262,7 @@ export function buildGarden() {
 
   /* ---------- back right: a cottage garden of dahlias, foxgloves, cosmos, and roses round a wisteria pergola ---------- */
   const GX = 16.6, GZ = CROSS_Z - 11.5, GH = 3.3;
-  add(M.gravel, flat(5.2, 5.2, GX, GZ, .015));
+  add(M.gravelTop, flat(5.2, 5.2, GX, GZ, .015));
   add(M.gravel, flat(2, (CROSS_Z - 1.2) - (GZ + 2.6), GX, (CROSS_Z - 1.2 + GZ + 2.6) / 2, .015));
   for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) trellis.push(box(.2, GH, .2, GX + sx * 1.8, GH / 2, GZ + sz * 1.8));
   for (const sx of [-1, 1]) trellis.push(box(.16, .24, 4.6, GX + sx * 1.8, GH + .12, GZ));
@@ -252,16 +279,44 @@ export function buildGarden() {
     f.add(rose ? 'cuprose' : 'leaf', facing(x, y, z, new THREE.Vector3(rnd() - .5, rnd() - .3, rnd() - .5), 1.1, rose ? pick([0xf06c9b, 0xfbb3c8, 0xe2708f, 0xffffff], rnd) : 0xffffff));
   });
   const keepCottage = (x, z) => !nearLavender(x) && !(Math.abs(x - GX) < 3.4 && Math.abs(z - GZ) < 3.4) && !(Math.abs(x - GX) < 1.3 && z > GZ) && !(x < 6.5 && z < ARCH_Z + 3.4);
-  add(M.hedge, flat(GW - 3 - 4, CROSS_Z - 1.8 - BACK_Z, (GW - 3 + 4) / 2, (CROSS_Z - 1.8 + BACK_Z) / 2, .008));
-  scatter(4.2, GW - 3, BACK_Z, CROSS_Z - 1.8, .5, rnd, keepCottage, (x, z) => {
+  add(M.ground, flat(GW - 3 - 4, CROSS_Z - 1.8 - BACK_Z, (GW - 3 + 4) / 2, (CROSS_Z - 1.8 + BACK_Z) / 2, .008));
+  scatter(4.2, GW - 3, BACK_Z, CROSS_Z - 1.8, .45, rnd, keepCottage, (x, z) => {
     const u = rnd(), drift = Math.floor((x + 3) / 3.4) * 7 + Math.floor(-z / 2.8);
     if (u < .5) { // dahlias: big heads on tall stems
       plant(f, 'dahlia', x, z, .7 + rnd() * .45, DAHLIA[drift % DAHLIA.length], rnd, 1.5 + rnd() * .7);
       if (rnd() < .4) f.add('leaf', { x, y: .3, z, s: 1.5, rx: (rnd() - .5) * 1.2, ry: rnd() * 6 });
-    } else if (u < .66) plant(f, 'spike', x, z, .55 + rnd() * .4, SPIKE[drift % SPIKE.length], rnd, 1.1 + rnd() * .5);
-    else if (u < .88) plant(f, 'daisy', x, z, .6 + rnd() * .35, pick(COSMOS, rnd), rnd, 1.2 + rnd() * .4);
+    } else if (u < .64) plant(f, 'spike', x, z, .55 + rnd() * .4, SPIKE[drift % SPIKE.length], rnd, 1.1 + rnd() * .5);
+    else if (u < .78) plant(f, 'daisy', x, z, .6 + rnd() * .35, pick(COSMOS, rnd), rnd, 1.2 + rnd() * .4);
+    else if (u < .9) plant(f, 'poppy', x, z, .5 + rnd() * .3, pick(POPPY, rnd), rnd, 1.2 + rnd() * .4);
     else plant(f, 'cuprose', x, z, .55 + rnd() * .3, pick([0xfbb3c8, 0xfde3e3, 0xf3a3c0], rnd), rnd, 1.2);
   });
+
+  /* ---------- more beds: tulips, peonies, and poppies by the allée; a mixed bed past the basin; a border along the cliff ---------- */
+  bed(-6.4, -2.6, CROSS_Z + 1.6, EDGE_Z - 4.6, .42, null, (x, z) => {
+    const u = rnd(), band = Math.floor(-z / 2.2);
+    if (u < .6) plant(f, 'tulip', x, z, .42 + rnd() * .22, rnd() < .85 ? TULIP[band % TULIP.length] : pick(TULIP, rnd), rnd);
+    else if (u < .78) plant(f, 'peony', x, z, .5 + rnd() * .2, pick([0xf7c6d0, 0xf2a7b5, 0xfbe6e0, 0xe57e8f], rnd), rnd, 1.3);
+    else plant(f, 'poppy', x, z, .45 + rnd() * .3, pick(POPPY, rnd), rnd, 1.2 + rnd() * .3);
+  });
+  bed(-GW + 3.1, -15.8, CROSS_Z + 1.6, EDGE_Z - 4.6, .45, null, (x, z) => {
+    const u = rnd();
+    if (u < .2) plant(f, 'peony', x, z, .5 + rnd() * .25, pick([0xf7c6d0, 0xf2a7b5, 0xffffff, 0xe57e8f], rnd), rnd, 1.3);
+    else if (u < .42) plant(f, 'cuprose', x, z, .55 + rnd() * .3, pick([0xfbb3c8, 0xf06c9b, 0xfde3e3], rnd), rnd, 1.3);
+    else if (u < .6) plant(f, 'poppy', x, z, .45 + rnd() * .3, pick(POPPY, rnd), rnd, 1.2 + rnd() * .3);
+    else if (u < .76) plant(f, 'spike', x, z, .55 + rnd() * .4, pick(SPIKE, rnd), rnd, 1.1 + rnd() * .4);
+    else plant(f, 'daisy', x, z, .55 + rnd() * .3, pick(COSMOS, rnd), rnd, 1.2 + rnd() * .3);
+  });
+  for (const sx of [-1, 1]) {
+    const x0 = sx < 0 ? -GW + 1.2 : 4.8, x1 = sx < 0 ? -4.8 : GW - 1.2;
+    bed(x0, x1, CLIFF_Z + .9, CLIFF_Z + 2.7, .42, null, (x, z) => {
+      const u = rnd();
+      if (u < .3) plant(f, 'cuprose', x, z, .5 + rnd() * .3, pick([0xffffff, 0xfdf0e6, 0xf7cdd2, 0xf4b6c2], rnd), rnd, 1.3);
+      else if (u < .5) lavender(x, z, .45 + rnd() * .25);
+      else if (u < .66) plant(f, 'spike', x, z, .6 + rnd() * .35, pick([0xf5eef7, 0xe39ac3, 0xb98be0], rnd), rnd, 1.1 + rnd() * .4);
+      else if (u < .82) plant(f, 'daisy', x, z, .5 + rnd() * .3, pick([0xffffff, 0xf9d1e0], rnd), rnd, 1.2);
+      else plant(f, 'poppy', x, z, .45 + rnd() * .25, pick(POPPY, rnd), rnd, 1.2);
+    });
+  }
 
   /* ---------- trees: cherry blossom in the front corners, cypresses framing the view ---------- */
   const bark = [];

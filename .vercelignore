@@ -1,0 +1,6 @@
+# Notes and test tooling stay in the repo but off the public site. Vercel serves everything else as is.
+CLAUDE.md
+DESIGN.md
+README.md
+scripts
+displayed photos/README.md

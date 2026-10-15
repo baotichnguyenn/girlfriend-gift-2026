@@ -21,6 +21,9 @@ Read `DESIGN.md` before changing anything she will see.
 | `displayed photos/` | Her photos for the gallery walls, named `1.jpg`, `2.jpg`, … Has its own `README.md`. |
 | `DESIGN.md` | Visual language, 3D scene layout, camera, motion, copy voice. |
 | `scripts/smoke_test.py` | Headless walkthrough. Saves screenshots and fails on page errors. |
+| `middleware.js` | Vercel only: the password gate in front of every file. Not used when serving locally. |
+| `package.json` | Only `"type": "module"`, so Vercel loads `middleware.js` as an ES module. No dependencies, no scripts. |
+| `.vercelignore` | Keeps notes and test tooling off the public site. |
 
 ## Run it
 
@@ -162,6 +165,10 @@ This is the core requirement. It lives in `order.js`. Keep these invariants when
   The garden stays hidden until the doors open.
   In r128, an `InstancedMesh` is culled by its base geometry's bounds, so set `frustumCulled = false` on every one.
 - Scene colours are written as they should look. Pass them through `lin()` (sRGB to linear), as `materials.js` does.
+- Flat layers on the garden lawn flicker (z-fight) at a distance if they rely on a tiny height gap alone.
+  Use the layer materials, which add a depth bias in order: lawn, `M.ground` (leafy cover under beds), `M.gravel` (paths), `M.gravelTop` (circles and squares where paths meet).
+  Two surfaces of the same layer must not overlap; cut one short instead. The path ribbon has the strongest bias, so it always shows on the gravel.
+  The camera's near plane is 0.2 rather than 0.1 for the same reason.
 - Every UI colour is a token in `:root`. The UI is dark-only by design; only the garden at the end of the walk is bright.
 - Visibility is toggled with the `hidden` attribute, not inline `display` styles.
 
@@ -198,6 +205,22 @@ Manual checks before sharing a new version:
 - At 390 px wide, she stays in frame while walking and at each letter.
 - The published artifact gets past the loader. A module file missing from the publish stops it there.
 
+## Deploying on Vercel
+
+The site is static, so Vercel serves the repo as it is.
+
+- Import the GitHub repo as a Vercel project with Framework Preset "Other", no build command, and the default output directory (the repo root; there must be no `public/` folder, or Vercel serves that instead).
+- Every push to `main` redeploys.
+- `.vercelignore` keeps `CLAUDE.md`, `DESIGN.md`, `README.md`, and `scripts/` off the public site. Add any new notes or tooling there too.
+- Vercel is case-sensitive: `1.PNG` won't be found where `1.png` is expected, though it works on Windows locally.
+- Share the production domain (`proccini.vercel.app`). Deployment-specific links, such as `proccini-<hash>-<team>.vercel.app`, sit behind Vercel's own login.
+- Vercel's password protection isn't on the Hobby plan, so `middleware.js` is the password gate. Vercel runs it before serving any file.
+  - The password is the `SITE_PASSWORD` environment variable in the Vercel project, never in the repo. Without it, the site shows "not open yet" rather than opening.
+  - A correct password sets an HttpOnly cookie holding a hash of the password, for 60 days. Changing the password signs everyone out.
+  - Every file, not just the page, needs the cookie, so the letters in `js/config.js` and the photos can't be fetched directly.
+  - Returning nothing from the middleware lets Vercel serve the file. Keep it free of dependencies.
+- Don't turn on Vercel Web Analytics (see Privacy).
+
 ## Publishing as a Claude artifact
 
 The artifact host adds its own `<!doctype>`, `<html>`, `<head>`, and `<body>`.
@@ -211,5 +234,5 @@ To republish:
 ## Privacy
 
 The letters, her photo, and the photos in `displayed photos/` are personal.
-Keep this repository private.
+Keep this repository private. Anyone can read a public GitHub repo, whatever the website's password, so check its visibility before pushing personal content.
 Do not add analytics, trackers, or third-party embeds.

@@ -20,7 +20,7 @@ export const ANISO = renderer.capabilities.getMaxAnisotropy();
 export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0b12);
 scene.fog = new THREE.Fog(0x0e0b12, 15, 50);
-export const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 260);
+export const camera = new THREE.PerspectiveCamera(50, 1, 0.2, 260); // a near plane of 0.2, not 0.1, doubles depth precision
 
 // Meshes the pointer can click. Each has userData.kind: 'her', 'exhibit' (with userData.i), or 'finale'.
 export const clickables = [];

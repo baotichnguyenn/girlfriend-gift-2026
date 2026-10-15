@@ -31,8 +31,13 @@ export function createMaterials() {
   M.wash = new THREE.MeshBasicMaterial({ map: wash(), transparent: true, opacity: .5, depthWrite: false, blending: THREE.AdditiveBlending });
   M.grass = std({ map: grass(), roughness: 1, envMapIntensity: .2 });
   M.hedge = std({ map: foliage(), roughness: .95, envMapIntensity: .2 });
+  // Flat layers on the lawn. Their tiny height above it isn't enough for the depth buffer at a distance,
+  // so each also gets a depth bias that puts it in front of the layer below: lawn, ground cover, paths, path overlays.
+  const layer = (o, k) => std(Object.assign(o, { polygonOffset: true, polygonOffsetFactor: -k, polygonOffsetUnits: -4 * k }));
+  M.ground = layer({ map: M.hedge.map, roughness: 1, envMapIntensity: .15 }, 1); // leafy cover under the beds
   M.bark = std({ color: 0x4a3328, roughness: .9, envMapIntensity: .2 });
-  M.gravel = std({ map: gravel(), roughness: .95, envMapIntensity: .2 });
+  M.gravel = layer({ map: gravel(), roughness: .95, envMapIntensity: .2 }, 2);
+  M.gravelTop = layer({ map: M.gravel.map, roughness: .95, envMapIntensity: .2 }, 3); // circles and squares where paths meet
   M.rock = std({ map: rock(), roughness: .95, envMapIntensity: .2, side: THREE.DoubleSide });
   M.trellis = std({ color: lin(0x2f4a3c), roughness: .6, envMapIntensity: .3 }); // French treillage green
   M.water = std({ color: lin(0x7f9fb0), roughness: .08, metalness: .4, envMapIntensity: .7 });

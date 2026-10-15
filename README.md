@@ -7,5 +7,6 @@ A 3D museum walk. Holding the arrow keys walks a small figure of her across a li
 - Put the wall photos in `displayed photos/`, named `1.jpg`, `2.jpg`, … (see the README there)
 - Controls: hold ↑ or ↓ (or the on-screen arrows) to walk. Drag to look around, scroll or pinch to zoom, double-click to reset the view
 - Prototype tools: add `#edit` to the URL
+- Deploy: import this repo into Vercel with Framework Preset "Other" and no build command, then set the `SITE_PASSWORD` environment variable (see `CLAUDE.md`)
 
 See `DESIGN.md` for the design and `CLAUDE.md` for how the code is organised.

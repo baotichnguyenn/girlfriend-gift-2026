@@ -147,12 +147,14 @@ One unit is about 0.75 m. The numbers that place everything are in `js/layout.js
   - A limestone balustrade with urns runs along the cliff edge. Below it, rock falls away into misty valleys.
     Beyond, five layers of mountain ridges fade into haze, nearer ones darker, with the sun just above the peaks.
     The ridges are painted by the sky dome's shader, which follows the camera.
-  - A gravel allée runs from the doors to the flower arch. Box hedges and topiary cones line its first stretch; mounds of roses, peonies, and hydrangeas line the rest, like a wedding aisle.
+  - A gravel allée runs from the doors to the flower arch. Rounded box hedges and topiary cones line its first stretch; mounds of roses, peonies, and hydrangeas line the rest, like a wedding aisle.
   - The arch is a square frame covered in roses, peonies, hydrangea, and greenery, fullest at its top corners and spilling at its feet. Her portrait stands on an easel inside it, with the mountains behind.
-  - Front left: a round water-lily basin with a limestone rim, ringed by lavender.
+  - Front left: a round water-lily basin with a limestone rim, ringed by lavender. Beside the allée, a bed of tulips, peonies, and poppies; past the basin, a mixed bed of peonies, roses, poppies, foxgloves, and cosmos.
   - Front right: lilies (white, blush, stargazer pink, orange, yellow) and irises in drifts.
-  - Back left: a rose parterre of four curved beds in pinks, reds, and whites, round a green trellis rotunda covered in climbing roses.
-  - Back right: a cottage garden of dahlias, foxgloves and delphiniums, cosmos, and roses, round a pergola hung with wisteria.
+  - Back left: a rose parterre of four curved beds in pinks, reds, and whites, round a green trellis rotunda covered in climbing roses and ringed by white roses.
+  - Back right: a cottage garden of dahlias, foxgloves and delphiniums, cosmos, poppies, and roses, round a pergola hung with wisteria.
+  - Along the cliff, a border of white and blush roses, lavender, foxgloves, daisies, and poppies, either side of the view behind the arch. Garlands of roses drape the balustrade rail.
+  - Every bed sits on leafy ground cover, so no bare lawn shows between the flowers.
   - Hydrangeas line the museum's garden front, lavender lines the side balustrades, two cherry trees blossom in the front corners, and cypresses frame the view at the back.
   - Butterflies wander over the beds, and petals drift down the allée.
   - Her portrait is lit only after all five letters are read. The garden is hidden until the doors start to open.

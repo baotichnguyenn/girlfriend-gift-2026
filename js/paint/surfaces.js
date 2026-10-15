@@ -128,8 +128,8 @@ export function rock() {
 export function foliage() {
   return tiled(canvasTex(256, 256, (x, W) => {
     const rnd = seeded(13);
-    x.fillStyle = '#1f3a1f'; x.fillRect(0, 0, W, W);
-    for (let k = 0; k < 2600; k++) { x.fillStyle = hsl(95 + rnd() * 30, 35 + rnd() * 20, 14 + rnd() * 22, .9); x.beginPath(); x.ellipse(rnd() * W, rnd() * W, 2 + rnd() * 3, 1.2 + rnd() * 1.6, rnd() * Math.PI, 0, Math.PI * 2); x.fill(); }
+    x.fillStyle = '#26442a'; x.fillRect(0, 0, W, W);
+    for (let k = 0; k < 2600; k++) { x.fillStyle = hsl(95 + rnd() * 25, 32 + rnd() * 16, 19 + rnd() * 13, .85); x.beginPath(); x.ellipse(rnd() * W, rnd() * W, 2 + rnd() * 3, 1.2 + rnd() * 1.6, rnd() * Math.PI, 0, Math.PI * 2); x.fill(); }
   }), 1.5, 1.5);
 }
 

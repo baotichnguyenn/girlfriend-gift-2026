@@ -25,6 +25,7 @@ export function buildPathRibbon() {
   pathMat = new THREE.ShaderMaterial({
     uniforms: { uS: { value: 0 }, uGate: { value: S[0] }, uTime: { value: 0 }, uCol: { value: new THREE.Color(0xd8ad6a) } },
     transparent: true, depthWrite: false,
+    polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -16, // on top of the garden gravel, which it lies on
     vertexShader: 'attribute float aDist; attribute float aSide; varying float vD; varying float vSide; varying float vDepth; void main(){ vD=aDist; vSide=aSide; vec4 mv=modelViewMatrix*vec4(position,1.0); vDepth=-mv.z; gl_Position=projectionMatrix*mv; }',
     fragmentShader: [
       'uniform float uS; uniform float uGate; uniform float uTime; uniform vec3 uCol;',
