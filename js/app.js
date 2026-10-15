@@ -35,7 +35,7 @@ function tick() {
 
 async function loadFonts() {
   if (!document.fonts || !document.fonts.load) return;
-  const faces = ['600 64px "Bodoni Moda"', 'italic 500 64px "Bodoni Moda"', '600 24px "Archivo"', '400 24px "Archivo"', '400 40px "Kalam"', '300 40px "Kalam"'];
+  const faces = ['600 64px "Bodoni Moda"', 'italic 500 64px "Bodoni Moda"', '600 24px "Archivo"', '400 24px "Archivo"', '400 40px "Pinyon Script"', '400 40px "Charm"'];
   try { await Promise.race([Promise.all(faces.map((f) => document.fonts.load(f))), new Promise((r) => setTimeout(r, 3000))]); } catch (e) { /* fall back to system faces */ }
 }
 

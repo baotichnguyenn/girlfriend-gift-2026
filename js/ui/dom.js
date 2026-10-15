@@ -10,8 +10,8 @@ export const ui = {
   rail: $('#rail'), railFill: $('#railFill'), railHer: $('#railHer'), walkHint: $('#walkHint'),
   prompt: $('#prompt'), promptMeta: $('#promptMeta'), promptTitle: $('#promptTitle'), promptBtn: $('#promptBtn'),
   firstHint: $('#firstHint'), toast: $('#toast'), pad: $('#walkPad'), padFwd: $('#padFwd'), padBack: $('#padBack'),
-  letter: $('#letter'), envStage: $('#envStage'), envelope: $('#envelope'), sealBtn: $('#sealBtn'), sealNum: $('#sealNum'), envTo: $('#envTo'),
-  paper: $('#paper'), paperMeta: $('#paperMeta'), paperTitle: $('#paperTitle'), paperDear: $('#paperDear'), paperBody: $('#paperBody'), paperSign: $('#paperSign'), closeLetter: $('#closeLetter'),
+  letter: $('#letter'), envStage: $('#envStage'), envelope: $('#envelope'), sealBtn: $('#sealBtn'), sealNum: $('#sealNum'), envTo: $('#envTo'), envStamp: $('#envStamp'),
+  paper: $('#paper'), paperMeta: $('#paperMeta'), paperTitle: $('#paperTitle'), paperStamp: $('#paperStamp'), paperDate: $('#paperDate'), paperDear: $('#paperDear'), paperBody: $('#paperBody'), paperSign: $('#paperSign'), closeLetter: $('#closeLetter'),
   finale: $('#finale'), finEyebrow: $('#finEyebrow'), finTitle: $('#finTitle'), finBody: $('#finBody'), finSign: $('#finSign'), finStay: $('#finStay'), finAgain: $('#finAgain'),
   editPanel: $('#editPanel'), photoCount: $('#photoCount'), photoInput: $('#photoInput'), clearPhoto: $('#clearPhoto'), unlockAll: $('#unlockAll'), resetAll: $('#resetAll')
 };

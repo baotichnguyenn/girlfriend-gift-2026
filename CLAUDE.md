@@ -101,6 +101,7 @@ To change the count, update:
 | `ui/dom.js` | `ui` element map, `toast()`, `fail()`, `fillBody()`, `applyCopy()`, `BootError`. |
 | `ui/hud.js` | `enter()`, seals, chapter block, progress rail, station prompt. |
 | `ui/letter.js` | Letter overlay. |
+| `ui/stamp.js` | The letters' postage stamps and postmarks as inline SVG, dealt at random each visit, and the Vietnamese date line. |
 | `ui/finale.js` | Finale overlay and the trigger at the end of the path. |
 | `ui/edit.js` | `#edit` tools. |
 

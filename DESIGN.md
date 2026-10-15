@@ -26,7 +26,11 @@ A chapter HUD shows a counter, the current gallery, and a progress rail.
 3. **Walk.** Holding ↑ (or the on-screen ▲) walks the figure forward along the brass line, through an arch into each gallery. ↓ (or ▼) walks her back.
    The camera follows from behind. Dragging turns it around her, and scrolling or pinching zooms.
 4. **Arrival.** Near a letter, the camera swings to frame her and the frame. A prompt card offers "Open the letter".
-5. **Letter.** An envelope with a wax seal numbered I–V. She breaks the seal, and the letter rises out.
+5. **Letter.** An airmail envelope, striped red and blue, with a wax seal numbered I–V, a stamp, and "Par Avion". She breaks the seal, and the letter rises out.
+   The letter is old notepaper: aged and foxed, folded in three, with faded blue rules that the handwriting sits on and a burnt edge.
+   It opens with the title, the stamp, and a Vietnamese date line ("ngày 15 tháng 10 năm 2026", today in Vietnam), then "Dear …" in copperplate.
+   Each visit deals the five letters different stamps: one of eight Vietnamese motifs (lotus, conical hat, lanterns, One Pillar Pagoda, flower bicycle, rose, apricot blossom, dawn over mountains)
+   in a two-colour palette, with a value, a slight tilt, and a postmark reading the site's title, "Bưu điện", and today's date (`ui/stamp.js`).
    "Fold it away" closes it.
 6. **Unlock.** The rope barrier swings open. The next gallery's light comes up. The brass marker moves to the next frame.
 7. **The garden.** After letter V, the marker moves to the tall doors at the end of the last gallery.
@@ -49,6 +53,10 @@ The HUD has a soft dark gradient behind it (`--scrim-edge`), so it stays readabl
 | `--parchment` | `#efe3cb` | Main text on dark; envelope and paper |
 | `--parch-light` / `--parch-deep` | `#f7efde` / `#e0cfae` | Paper gradient ends |
 | `--parch-ink` | `#33241f` | Text on paper |
+| `--aged-light` / `--aged` / `--aged-edge` | `#f6ecd3` / `#ecdcb8` / `#d2b47f` | Old paper for the letter and envelope, darker toward the edge |
+| `--foxing`, `--burn`, `--crease-dark`, `--crease-light` | sepia tints | Age spots, the burnt edge, and the fold lines |
+| `--rule` / `--sepia-line` / `--sepia-soft` | faded blue / sepia | Notepaper rules / the letter's border and double rule / the date line |
+| `--airmail-red` / `--airmail-blue` | `#b8323a` / `#2d4f8e` | The envelope's airmail border and "Par Avion" |
 | `--velvet` / `--velvet-hi` | `#8e1f35` / `#b0304b` | Wax seals, ropes, "read" state, close button |
 | `--mist` / `--mist-dim` | `#bcb2c4` / `#7f7588` | Secondary and tertiary text |
 | `--hair` | brass at 28% | Hairlines and card borders |
@@ -82,9 +90,13 @@ Scene colours are written as they should look, and converted to linear with `lin
 | --- | --- | --- |
 | Display | Bodoni Moda | Headlines and titles, usually italic. Museum-catalogue feel. |
 | Labels and UI | Archivo | Uppercase, letter-spacing 0.15–0.24em, 0.6–0.8rem. Like wall text. |
-| Letters | Kalam | Handwriting for letter bodies, greeting, and signature. Light weight for body. |
+| Letter body and date | Charm | An ink-pen hand. Each line sits on a notepaper rule, so paragraphs indent instead of leaving gaps. |
+| Greeting and signature | Pinyon Script | Copperplate. Also the finale signature and the envelopes on the piers. |
+| Letter title | Playfair Display | Italic. |
+| Letter small print | EB Garamond | Uppercase exhibit line, "Par Avion", and the stamp captions. |
 
-All three load from Google Fonts and have system fallbacks.
+The letters are written in Vietnamese, so every face used on them must have Google Fonts' Vietnamese subset; Kalam, for example, doesn't.
+All of them load from Google Fonts and have system fallbacks.
 Canvas textures (placards, envelopes, wall title) use the same faces.
 
 ## Layout

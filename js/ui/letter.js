@@ -5,6 +5,7 @@ import { state } from '../state.js';
 import { markRead } from '../order.js';
 import { ui, toast, fillBody } from './dom.js';
 import { hidePrompt } from './hud.js';
+import { stampSVG, letterDate } from './stamp.js';
 
 let openIdx = -1;
 
@@ -31,6 +32,8 @@ export function openLetter(i) {
   ui.sealNum.textContent = ROMAN[i]; ui.envTo.textContent = 'for ' + CONFIG.herName;
   ui.paperMeta.textContent = 'Exhibit ' + ROMAN[i] + ' · ' + lt.medium;
   ui.paperTitle.textContent = lt.title;
+  ui.envStamp.innerHTML = stampSVG(i); ui.paperStamp.innerHTML = stampSVG(i); // our own markup, no user text
+  ui.paperDate.textContent = letterDate();
   ui.paperDear.textContent = 'Dear ' + CONFIG.herName + ',';
   fillBody(ui.paperBody, lt.body);
   ui.paperSign.textContent = '— ' + CONFIG.from;

@@ -8,7 +8,7 @@
 <title>Proccini </title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Archivo:wght@400;500;600&family=Kalam:wght@300;400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Archivo:wght@400;500;600&family=Charm:wght@400;700&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap">
 <link rel="stylesheet" href="css/museum.css">
 
 <div id="stage"><canvas id="c" aria-label="A 3D museum. A small figure walks a brass path through galleries of photographs, past five framed letters, out into a garden."></canvas></div>
@@ -68,12 +68,17 @@
       <div class="env-body"></div>
       <div class="env-flap"></div>
       <button class="seal" id="sealBtn" type="button" aria-label="Break the seal and open the letter"><span id="sealNum">I</span></button>
+      <div class="env-stamp" id="envStamp"></div>
+      <p class="env-airmail">Par Avion</p>
       <p class="env-to" id="envTo"></p>
       <p class="env-hint">Tap the seal to open</p>
     </div>
     <article class="paper" id="paper">
-      <p class="paper-meta" id="paperMeta"></p>
-      <h2 class="paper-title" id="paperTitle"></h2>
+      <header class="paper-head">
+        <div><p class="paper-meta" id="paperMeta"></p><h2 class="paper-title" id="paperTitle"></h2></div>
+        <div class="paper-stamp" id="paperStamp"></div>
+      </header>
+      <p class="paper-date" id="paperDate"></p>
       <p class="paper-dear" id="paperDear"></p>
       <div class="paper-body" id="paperBody"></div>
       <p class="paper-sign" id="paperSign"></p>

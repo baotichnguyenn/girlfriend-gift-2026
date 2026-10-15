@@ -19,7 +19,7 @@ export function drawEnvelope(x, w, h, i, open) {
   const pg = x.createLinearGradient(0, 0, w, h); pg.addColorStop(0, '#f2e7d0'); pg.addColorStop(1, '#d9c6a2');
   if (open) {
     x.fillStyle = '#f8f0df'; rrect(x, 120, 34, w - 240, 320, 6); x.fill();
-    x.fillStyle = '#4a3428'; x.font = '400 36px Kalam, cursive'; x.fillText('Dear ' + CONFIG.herName + ',', 160, 96);
+    x.fillStyle = '#4a3428'; x.font = '400 46px "Pinyon Script", cursive'; x.fillText('Dear ' + CONFIG.herName + ',', 160, 96);
     x.strokeStyle = 'rgba(70,50,40,.35)'; x.lineWidth = 3; x.lineCap = 'round';
     for (let r = 0; r < 4; r++) { const yy = 140 + r * 34; x.beginPath(); x.moveTo(160, yy); for (let xx = 160; xx < w - 170; xx += 16) x.lineTo(xx + 8, yy - 5 + Math.sin(xx * .31 + r * 2) * 4); x.stroke(); }
     x.fillStyle = pg; rrect(x, 40, 200, w - 80, h - 240, 8); x.fill();
@@ -33,7 +33,7 @@ export function drawEnvelope(x, w, h, i, open) {
     x.strokeStyle = 'rgba(60,40,30,.22)'; x.lineWidth = 3; x.beginPath(); x.moveTo(44, 46); x.lineTo(w / 2, 300); x.lineTo(w - 44, 46); x.stroke();
     x.strokeStyle = 'rgba(60,40,30,.12)'; x.beginPath(); x.moveTo(44, h - 44); x.lineTo(w / 2 - 50, 312); x.moveTo(w - 44, h - 44); x.lineTo(w / 2 + 50, 312); x.stroke();
     drawSeal(x, w / 2, 300, 62, ROMAN[i]);
-    x.fillStyle = '#4a3428'; x.font = '400 38px Kalam, cursive'; x.textAlign = 'right'; x.fillText('for ' + CONFIG.herName, w - 90, h - 78); x.textAlign = 'left';
+    x.fillStyle = '#4a3428'; x.font = '400 50px "Pinyon Script", cursive'; x.textAlign = 'right'; x.fillText('for ' + CONFIG.herName, w - 90, h - 78); x.textAlign = 'left';
   }
 }
 // i is 0–4 for the letters and 5 for the portrait in the garden. status is 'locked', 'current', or 'read'.

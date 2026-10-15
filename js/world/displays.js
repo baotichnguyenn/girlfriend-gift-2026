@@ -54,8 +54,9 @@ function whale(g) {
   }
   // cables up to the ceiling
   for (const x of [5.2, 1, -3.4]) out.push(new THREE.CylinderGeometry(.012, .012, CEIL - 6.4, 4).translate(x, (CEIL + 6.4) / 2, 0));
-  g.add(new THREE.Mesh(merge(out), bone));
-  g.rotation.y += Math.PI / 2; // lie along the gallery, not across it
+  // spot() already turns local x to run along the gallery, so the whale hangs parallel to the wall;
+  // shift it so the jaw and tail sit evenly between the arches
+  const m = new THREE.Mesh(merge(out), bone); m.position.x = -.8; g.add(m);
 }
 
 /* ---------- III: a marble goddess, after the Venus de Milo ---------- */
