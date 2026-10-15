@@ -13,7 +13,7 @@ import { frameGeo } from './frames.js';
 export const PHOTO_DIR = 'displayed photos/';
 const EXTS = ['jpg', 'jpeg', 'png', 'webp'];
 const MAX_PX = 768;   // photos are scaled down to this, to keep GPU memory small on phones
-const MAT = .26;      // cream mat between a photograph and its frame
+const MAT = .26;      // cream mat between a photograph and its frame, at most; slim photos get a slimmer one
 const LABEL_Y = 1.55; // wall labels hang at about eye level
 const PAINTING_TITLES = ['Evening, Rose Garden', 'Study of Morning Light', 'The Long Field', 'Landscape at the Blue Hour', 'Orchard in May', 'River, Late Afternoon', 'The Quiet Shore', 'Hills After Rain'];
 
@@ -21,10 +21,11 @@ const PAINTING_TITLES = ['Evening, Rose Garden', 'Study of Morning Light', 'The 
 export const SLOTS = [];
 const WALLS = [...PARTITION_Z, DOOR_Z];
 STATION_Z.forEach((zc, g) => {
-  const side = (sx, dz, portrait) => SLOTS.push({ x: sx * (HALF_W - .01), z: zc + dz, nx: -sx, nz: 0, y: 3.05, maxW: 2.6, maxH: 2.3, portrait });
+  // maxW and maxH bound the picture itself; area is how much wall a picture of any shape should take
+  const side = (sx, dz, portrait) => SLOTS.push({ x: sx * (HALF_W - .01), z: zc + dz, nx: -sx, nz: 0, y: 3.05, maxW: 4, maxH: 2.6, area: 4.4, portrait });
   side(-1, 4.6, false); side(1, 4.6, false); side(-1, -4.6, true); side(1, -4.6, true);
   const ez = WALLS[g + 1] + WALL_T / 2 + .01;
-  for (const sx of [-1, 1]) SLOTS.push({ x: sx * 8.25, z: ez, nx: 0, nz: 1, y: 3.2, maxW: 3.1, maxH: 2.55, portrait: false });
+  for (const sx of [-1, 1]) SLOTS.push({ x: sx * 8.25, z: ez, nx: 0, nz: 1, y: 3.2, maxW: 4.4, maxH: 2.8, area: 5.6, portrait: false });
 });
 
 const paintings = new Map();
@@ -49,7 +50,7 @@ function drawLabel(slot) {
 
 // Sizes the frame, mat, picture, wall wash, and label around a picture of cw × ch.
 function fit(slot, cw, ch, withMat) {
-  const m = withMat ? MAT : 0, ow = cw + 2 * m + .34, oh = ch + 2 * m + .34;
+  const m = withMat ? Math.min(MAT, Math.max(.08, Math.min(cw, ch) * .14)) : 0, ow = cw + 2 * m + .34, oh = ch + 2 * m + .34;
   const { gold, deep } = frameGeo(cw + 2 * m, ch + 2 * m);
   const swap = (mesh, geo) => { mesh.geometry.dispose(); mesh.geometry = geo; };
   swap(slot.gold, gold); swap(slot.deep, deep);
@@ -72,10 +73,17 @@ export function buildPhotos() {
     const lc = document.createElement('canvas'); lc.width = 512; lc.height = 232;
     slot.labelCtx = lc.getContext('2d'); slot.labelTex = makeTex(lc);
     slot.label = new THREE.Mesh(new THREE.PlaneGeometry(.62, .28), new THREE.MeshBasicMaterial({ map: slot.labelTex, color: 0xd8d0c4 })); g.add(slot.label);
-    const pw = slot.portrait ? Math.min(slot.maxW, slot.maxH * .75) : Math.min(slot.maxW, slot.maxH * 4 / 3);
-    fit(slot, pw, slot.portrait ? pw / .75 : pw * .75, false);
+    fit(slot, ...size(slot, slot.portrait ? .75 : 4 / 3), false);
     drawLabel(slot);
   });
+}
+
+// Width and height for a picture of this aspect: the slot's area, shrunk if needed to fit its bounds.
+// So a square photo and a long screenshot take a similar share of the wall, rather than one becoming a sliver.
+function size(slot, aspect) {
+  let w = Math.sqrt(slot.area * aspect), h = w / aspect;
+  const k = Math.min(1, slot.maxW / w, slot.maxH / h);
+  return [w * k, h * k];
 }
 
 function loadImage(url) {
@@ -85,9 +93,8 @@ function loadImage(url) {
 function showPhoto(slot, img, file) {
   const iw = img.naturalWidth, ih = img.naturalHeight, sc = Math.min(1, MAX_PX / Math.max(iw, ih));
   const tex = canvasTex(Math.max(1, Math.round(iw * sc)), Math.max(1, Math.round(ih * sc)), (x, w, h) => x.drawImage(img, 0, 0, w, h));
-  const k = Math.min((slot.maxW - 2 * MAT) / iw, (slot.maxH - 2 * MAT) / ih);
   slot.picMat.map = slot.picMat.emissiveMap = tex; slot.picMat.emissiveIntensity = .3; slot.picMat.roughness = .55; slot.picMat.needsUpdate = true;
-  fit(slot, iw * k, ih * k, true);
+  fit(slot, ...size(slot, iw / ih), true);
   slot.file = file; drawLabel(slot);
 }
 

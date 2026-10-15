@@ -7,7 +7,8 @@ import { renderer, scene, camera } from './engine.js';
 import { restoreProgress } from './order.js';
 import { resize, snapCamera, updateCamera } from './camera.js';
 import { initInput, updateInput, updateHover } from './input.js';
-import { setPhoto } from './paint/photo.js';
+import { setPhoto, loadPhotoFolders } from './paint/photo.js';
+import { loadLetterFiles } from './ui/letter.js';
 import { buildWorld, settleWorld, updateWorld, warmUp } from './world/index.js';
 import { loadPhotos, PHOTO_DIR } from './world/photos.js';
 import { updateHer } from './world/her.js';
@@ -43,11 +44,12 @@ export async function start() {
   window.addEventListener('resize', resize);
   await loadFonts();
   ui.ldText.textContent = 'Hanging the letters…';
-  await new Promise((r) => setTimeout(r, 30));
+  await loadLetterFiles(); // before building, because letter titles go on the placards
   setPhoto(null);
   buildWorld(); buildHud();
   restoreProgress(); settleWorld();
-  const ph = CONFIG.photo || store.get('mou-photo'); if (ph) setPhoto(ph);
+  const ph = CONFIG.photo || store.get('mou-photo'); if (ph) await setPhoto(ph);
+  await loadPhotoFolders();
   resize(); warmUp(); state.mode = 'intro'; snapCamera();
   tick();
   ui.intro.hidden = false;

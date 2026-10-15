@@ -5,6 +5,8 @@ A 3D museum walk. Holding the arrow keys walks a small figure of her across a li
 - Run: `python3 -m http.server 8000` (or `py -m http.server 8000` on Windows), then open http://localhost:8000
 - Edit the letters, her name, and her photo in `CONFIG` in `js/config.js`
 - Put the wall photos in `displayed photos/`, named `1.jpg`, `2.jpg`, … (see the README there)
+- Her face for the figure: `her face/face.jpg`. The garden portrait: `garden portrait/portrait.jpg`
+- The letters: `letters/1.txt` … `5.txt`, one paragraph per line
 - Controls: hold ↑ or ↓ (or the on-screen arrows) to walk. Drag to look around, scroll or pinch to zoom, double-click to reset the view
 - Prototype tools: add `#edit` to the URL
 - Deploy: import this repo into Vercel with Framework Preset "Other" and no build command, then set the `SITE_PASSWORD` environment variable (see `CLAUDE.md`)

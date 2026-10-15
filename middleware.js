@@ -24,7 +24,7 @@ const NO_STORE = { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' };
 
 export default async function middleware(request) {
   const password = process.env.SITE_PASSWORD;
-  if (!password) return gate(503, 'The museum isn’t open yet. Its password hasn’t been set.');
+  if (!password) return gate(503, 'Please key in your password');
   const expected = await hash(password);
   const url = new URL(request.url);
 

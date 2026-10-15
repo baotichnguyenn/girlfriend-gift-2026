@@ -19,6 +19,9 @@ Read `DESIGN.md` before changing anything she will see.
 | `css/museum.css` | All styles. Colour tokens are in `:root`. |
 | `js/` | The app as native ES modules. See "How the code is organised". No build step. |
 | `displayed photos/` | Her photos for the gallery walls, named `1.jpg`, `2.jpg`, … Has its own `README.md`. |
+| `her face/` | `face.jpg`: the walking figure's head. |
+| `garden portrait/` | `portrait.jpg`: the portrait on the easel in the garden. |
+| `letters/` | `1.txt` … `5.txt`: the letters' text, one paragraph per line, optional first line `Title: …`. |
 | `DESIGN.md` | Visual language, 3D scene layout, camera, motion, copy voice. |
 | `scripts/smoke_test.py` | Headless walkthrough. Saves screenshots and fails on page errors. |
 | `middleware.js` | Vercel only: the password gate in front of every file. Not used when serving locally. |
@@ -37,15 +40,18 @@ All content lives in `CONFIG` in `js/config.js`.
 
 - `herName`: each letter opens with "Dear <herName>,".
 - `from`: signature on letters and placards ("Gift of Bao").
-- `photo`: path relative to `index.html`, or a `data:` URI. It becomes the figure's head and the final portrait.
+- `photo`: path relative to `index.html`, or a `data:` URI. It becomes the figure's head and the final portrait, unless `her face/face.jpg` or `garden portrait/portrait.jpg` exists; those win.
+- `together`: the start date (`YYYY-MM-DD`, Vietnam time) for the flip clock's day count.
 - `dress`: hex colour of the figure's dress.
 - `photoTitles`: optional wall-label titles for the photos, in number order.
 - `letters`: array of `{ title, medium, body: [paragraphs] }`. **Array order is the enforced reading order.**
+  `letters/1.txt` … `5.txt` replace a letter's body (and title, with a `Title:` line). `loadLetterFiles()` reads them before the world is built, because titles go on the placards.
   Text in `[square brackets]` renders highlighted as a placeholder.
 - `finale`: eyebrow, title, and body for the card in the garden.
 
 Wall photos are files, not config. Put them in `displayed photos/` named `1.jpg`, `2.jpg`, … (`.jpeg`, `.png`, and `.webp` also work).
 `photos.js` loads them in order and stops at the first missing number. There are 30 frames; any without a photo shows a painting.
+Each frame is sized from its photo's shape to the slot's `area`, within `maxW` × `maxH`, so square photos and long screenshots take similar wall space. The mat slims for slim photos.
 With `#edit`, each wall label shows its slot number, and the edit panel says how many photos loaded.
 
 The code assumes exactly five letters.
@@ -86,9 +92,10 @@ To change the count, update:
 | `world/ribbon.js` | The path ribbon shader: walked, open to the gate, locked. |
 | `world/exhibits.js` | The five letter piers, the portrait on its easel, spotlights, and the marker. Owns `EX`, `fin`, and `VIEW`. |
 | `world/ropes.js` | Stanchions, rope lines, and the barrier past each letter. |
-| `world/doors.js` | The garden doors. They open once `readCount` is 5 and she comes near. |
+| `world/doors.js` | The garden doors. They open once `readCount` is 5 and she comes near, and close when she walks back into the gallery, which brings the night back. |
 | `world/sky.js` | Lights, the sky dome, and the night-to-dawn change that follows the doors. The dome's shader also paints the mountain ridges and valley mist, and the dome follows the camera. |
 | `world/garden.js` | The clifftop garden: allées, the flower arch, balustrade and cliff, the water-lily basin, the rose parterre and trellis rotunda, the cottage beds and pergola, trees, petals, butterflies, and the switch that hides it all until the doors open. |
+| `world/flipclock.js` | The flip clock beside the garden portrait: days since `CONFIG.together`, flipping card by card once the garden is visible. |
 | `world/her.js` | Her figure, her fill light, and `updateHer()`: movement toward `sTarget`, the plinth hop, walk cycle, waving, facing. |
 | `ui/dom.js` | `ui` element map, `toast()`, `fail()`, `fillBody()`, `applyCopy()`, `BootError`. |
 | `ui/hud.js` | `enter()`, seals, chapter block, progress rail, station prompt. |
@@ -143,7 +150,7 @@ This is the core requirement. It lives in `order.js`. Keep these invariants when
 - `refresh()` re-derives everything from `readCount`: envelope textures, placards, light targets, ropes, seals, rail nodes.
   Every `readCount` change calls it.
 - The garden doors read `readCount` but never change it. She can only reach them because `gateS()` is `L` once all five are read.
-  Resetting progress closes the doors and brings the night back.
+  Walking back into the gallery, or resetting progress, closes the doors and brings the night back.
 - Progress persists in localStorage key `mou-read`. A previewed photo persists in `mou-photo`.
   `CONFIG.photo` wins over the stored photo.
 

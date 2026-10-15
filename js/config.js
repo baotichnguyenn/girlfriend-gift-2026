@@ -2,15 +2,17 @@
    EDIT THIS PART
    ================================================================ */
 export const CONFIG = {
-  herName: 'my love',            // each letter opens with "Dear <herName>,"
-  from: 'Bao',                   // signature at the bottom of each letter
+  herName: 'Proccnin Thui',            // each letter opens with "Dear <herName>,"
+  from: 'Steve and Bimo',                   // signature at the bottom of each letter
   photo: '',                     // her photo: 'her.jpg' (next to index.html) or a data: URI. Square-ish, face in the middle.
-  dress: '#b8576b',              // colour of the figure's dress
+  dress: '#f7dfd4',              // colour of the figure's dress
+  // The day it all began, as YYYY-MM-DD in Vietnam time. The flip clock in the garden counts the days since.
+  together: '2025-08-09',
   // Wall-label titles for the photos in "displayed photos": the first is for 1.jpg, and so on. Leave out any you like.
   photoTitles: [],
-  title: 'Museum of Us',
-  introTitle: ['Five letters.', 'One way through.'],
-  introText: 'They hang in the order they were written to be read. Follow the brass line, and open each one when you reach it.',
+  title: 'Proccini',
+  introTitle: ['Five letters.'],
+  introText: 'Read 5 letters in sequence',
   // The order here IS the order she has to read them in.
   letters: [
     { title: 'The first time', medium: 'Letter, ink on paper', body: [
@@ -40,8 +42,8 @@ export const CONFIG = {
     ]}
   ],
   finale: {
-    eyebrow: 'Exhibit VI · Mixed media, ongoing',
-    title: 'The last exhibit is you.',
-    body: 'Thank you for walking all the way through. [Your closing line goes here.]'
+    eyebrow: 'Finally',
+    title: 'Anh yêu em thúi nhất trên đờii',
+    body: 'Thank you for coming into my life and spending yours with me :)'
   }
 };

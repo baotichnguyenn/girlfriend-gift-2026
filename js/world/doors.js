@@ -1,5 +1,5 @@
 // The tall doors at the end of the last gallery. Once all five letters are read and she comes near,
-// they swing open onto the garden, and dawn comes up (see sky.js).
+// they swing open onto the garden, and dawn comes up (see sky.js). Walking back in closes them.
 import { reduceMotion, ease, clamp } from '../util.js';
 import { state } from '../state.js';
 import { scene } from '../engine.js';
@@ -14,7 +14,7 @@ export const fanlight = new THREE.MeshBasicMaterial({ color: 0x1d2742, toneMappe
 
 // How far open the doors are, 0 to 1.
 export const doorAmount = () => amount;
-// True once the doors have been triggered, until progress is reset.
+// True while the doors should be open: all letters read and she is at the end of the walk.
 export const doorsOpening = () => opened;
 
 export function buildDoors() {
@@ -40,8 +40,10 @@ export function buildDoors() {
 }
 
 export function updateDoors(dt) {
-  if (state.readCount < 5) opened = false;
-  else if (state.s > S_DOOR - 9) opened = true;
+  // open as she nears them; close again once she walks back into the gallery, which brings the night back (sky.js).
+  // The gap between the two distances stops them flapping while she stands near the doors.
+  if (state.readCount < 5 || state.s < S_DOOR - 11) opened = false;
+  else if (state.s > S_DOOR - 7) opened = true;
   const target = opened ? 1 : 0;
   amount = reduceMotion ? target : clamp(amount + Math.sign(target - amount) * dt / 2.2, 0, 1);
   const k = ease(amount);

@@ -31,6 +31,7 @@ A chapter HUD shows a counter, the current gallery, and a progress rail.
 6. **Unlock.** The rope barrier swings open. The next gallery's light comes up. The brass marker moves to the next frame.
 7. **The garden.** After letter V, the marker moves to the tall doors at the end of the last gallery.
    As she nears them, they swing open and dawn comes up: the sky, the skylights, and the light all warm from night to sunrise.
+   If she walks back into the gallery, they swing shut and the night returns.
    The path continues down a gravel allée lined with flowers to an arch covered in roses, where her portrait stands on an easel, with the mountains behind it.
    The finale card reads "The last exhibit is you."
 
@@ -158,6 +159,7 @@ One unit is about 0.75 m. The numbers that place everything are in `js/layout.js
   - Hydrangeas line the museum's garden front, lavender lines the side balustrades, two cherry trees blossom in the front corners, and cypresses frame the view at the back.
   - Butterflies wander over the beds, and petals drift down the allée.
   - Her portrait is lit only after all five letters are read. The garden is hidden until the doors start to open.
+  - In front of the arch, to one side, a walnut flip clock on a limestone pedestal counts the days together ("DAYS TOGETHER"). It shows 0000 until she reaches the garden, then its cards flip over to the count, left to right.
 
 ## Camera
 

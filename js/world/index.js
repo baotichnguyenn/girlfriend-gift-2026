@@ -11,6 +11,7 @@ import { buildExhibits, buildMarker, settleLights, updateExhibits } from './exhi
 import { buildDoors, updateDoors } from './doors.js';
 import { buildBarriers, buildRopeLines, settleBarriers, updateBarriers } from './ropes.js';
 import { buildHer } from './her.js';
+import { updateFlipClock } from './flipclock.js';
 
 export function buildWorld() {
   // environment map: warm gallery light for the gold and brass to reflect
@@ -53,4 +54,5 @@ export function updateWorld(dt) {
   updatePathRibbon();
   updateDust();
   updateChandeliers();
+  updateFlipClock(dt, garden.visible);
 }

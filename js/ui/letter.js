@@ -8,6 +8,21 @@ import { hidePrompt } from './hud.js';
 
 let openIdx = -1;
 
+// Letters dropped into the "letters" folder as 1.txt … 5.txt replace the text in CONFIG.
+// Each non-empty line is a paragraph. A first line "Title: …" also replaces the letter's title.
+export async function loadLetterFiles() {
+  await Promise.all(CONFIG.letters.map(async (lt, i) => {
+    try {
+      const res = await fetch('letters/' + (i + 1) + '.txt', { cache: 'no-cache' });
+      if (!res.ok) return;
+      const lines = (await res.text()).replace(/^﻿/, '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      const title = lines[0] && /^title\s*:/i.test(lines[0]) ? lines.shift().replace(/^title\s*:\s*/i, '') : '';
+      if (title) lt.title = title;
+      if (lines.length) lt.body = lines;
+    } catch (e) { /* no file: keep the text in CONFIG */ }
+  }));
+}
+
 // Only call with i <= readCount. Callers check the order first.
 export function openLetter(i) {
   if (state.mode !== 'walk') return;

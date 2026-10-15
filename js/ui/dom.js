@@ -41,11 +41,11 @@ export function fillBody(el, paras) {
 export function applyCopy() {
   document.title = CONFIG.title;
   $('#ldEyebrow').textContent = CONFIG.title;
-  $('#markName').textContent = CONFIG.title;
   const h = ui.intro.querySelector('h1');
   h.textContent = '';
-  h.append(document.createTextNode(CONFIG.introTitle[0] + ' '));
-  const em = document.createElement('em'); em.textContent = CONFIG.introTitle[1]; h.append(em);
+  const [line1, line2] = [].concat(CONFIG.introTitle); // one line, or two with the second in italics
+  h.append(document.createTextNode((line1 || '') + (line2 ? ' ' : '')));
+  if (line2) { const em = document.createElement('em'); em.textContent = line2; h.append(em); }
   $('#introLede').textContent = CONFIG.introText;
   $('#tapText').textContent = coarse ? 'Tap her to step inside' : 'Click her to step inside';
   ui.walkHint.textContent = coarse ? '▲ ▼ to walk · drag to look' : '↑ ↓ to walk · drag to look';

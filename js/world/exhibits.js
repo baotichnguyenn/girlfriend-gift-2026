@@ -13,6 +13,7 @@ import { box, merge } from './geo.js';
 import { frameGeo } from './frames.js';
 import { garden } from './garden.js';
 import { doorAmount } from './doors.js';
+import { buildFlipClock } from './flipclock.js';
 
 export const EX = [];   // one per letter
 export let fin = null;  // the portrait in the garden
@@ -102,6 +103,7 @@ function buildFinale() {
   stand.add(new THREE.Mesh(merge([new THREE.CylinderGeometry(.03, .03, 1.1, 6).translate(0, .55, 0), box(.36, .03, .36, 0, .015, 0)]), M.bronze));
   const { plCtx, plTex, mesh } = placard(stand, 0, 1.25, .02);
   mesh.rotation.x = -.5;
+  buildFlipClock(g);
   g.updateMatrixWorld(true);
   const frameWorld = g.localToWorld(new V3(0, FY, FZ));
   // in the scene, not the hidden garden, so the number of lights never changes and no shader recompiles

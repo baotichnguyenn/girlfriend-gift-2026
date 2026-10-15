@@ -67,11 +67,28 @@ function drawPortrait(img) {
   portraitTex.needsUpdate = true;
 }
 
-// Paints both from an image path or data: URI. With no src, paints the drawing instead.
+// Paints both from an image path or data: URI. With no src, paints the drawing instead. Resolves once painted.
 export function setPhoto(src) {
   if (!src) { drawFace(null); drawPortrait(null); return; }
-  const img = new Image();
-  img.onload = () => { drawFace(img); drawPortrait(img); };
-  img.onerror = () => toast('That photo didn’t load. Check the path in CONFIG.photo.');
-  img.src = src;
+  return new Promise((res) => {
+    const img = new Image();
+    img.onload = () => { drawFace(img); drawPortrait(img); res(); };
+    img.onerror = () => { toast('That photo didn’t load. Check the path in CONFIG.photo.'); res(); };
+    img.src = src;
+  });
+}
+
+const EXTS = ['jpg', 'jpeg', 'png', 'webp'];
+function loadFirst(base) {
+  return EXTS.reduce((p, ext) => p.then((img) => img || new Promise((res) => {
+    const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = encodeURI(base + '.' + ext);
+  })), Promise.resolve(null));
+}
+
+// Pictures dropped into their folders win over CONFIG.photo:
+// "her face/face.jpg" becomes the figure's head, "garden portrait/portrait.jpg" the portrait in the garden.
+export async function loadPhotoFolders() {
+  const [face, portrait] = await Promise.all([loadFirst('her face/face'), loadFirst('garden portrait/portrait')]);
+  if (face) drawFace(face);
+  if (portrait) drawPortrait(portrait);
 }
