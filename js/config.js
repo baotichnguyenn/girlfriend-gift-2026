@@ -43,7 +43,7 @@ export const CONFIG = {
   ],
   finale: {
     eyebrow: 'Finally',
-    title: 'Anh yêu em thúi nhất trên đờii',
+    title: 'Anh yêu và thương em ratt nhìu, my most precious babi',
     body: 'Thank you for coming into my life and spending yours with me :)'
   }
 };

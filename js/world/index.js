@@ -4,6 +4,7 @@ import { createMaterials } from './materials.js';
 import { buildSky, settleSky, updateSky } from './sky.js';
 import { buildMuseum, buildDust, updateDust } from './museum.js';
 import { buildChandeliers, updateChandeliers } from './chandeliers.js';
+import { buildDisplays } from './displays.js';
 import { buildPhotos } from './photos.js';
 import { buildPathRibbon, updatePathRibbon } from './ribbon.js';
 import { garden, buildGarden, updateGarden } from './garden.js';
@@ -27,6 +28,7 @@ export function buildWorld() {
   buildSky(garden);
   buildMuseum();
   buildChandeliers();
+  buildDisplays();
   buildPhotos();
   buildPathRibbon();
   buildGarden();

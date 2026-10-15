@@ -99,8 +99,9 @@ export function buildMuseum() {
   const plinth = new THREE.Mesh(new THREE.CylinderGeometry(.62, .68, PLINTH_H, 40), M.marble); plinth.position.set(p0.x, PLINTH_H / 2, p0.z); scene.add(plinth);
   const rim = new THREE.Mesh(new THREE.TorusGeometry(.62, .02, 8, 48), M.brass); rim.rotation.x = Math.PI / 2; rim.position.set(p0.x, PLINTH_H, p0.z); scene.add(rim);
 
-  // a bench in each gallery, across from the letter
+  // a bench across from the letter in gallery I; the other galleries have a display there (displays.js)
   STATION_Z.forEach((z, i) => {
+    if (i > 0) return;
     const x = -STATION_SIDE[i] * 7.8;
     add(M.wood, box(.7, .42, 2.9, x, .21, z)); add(M.leather, box(.95, .16, 3.2, x, .5, z));
   });

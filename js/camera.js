@@ -5,7 +5,7 @@ import { clamp, smooth } from './util.js';
 import { state } from './state.js';
 import { renderer, camera, V3, UP } from './engine.js';
 import { at, tan, nrm, PLINTH_H } from './path.js';
-import { HALF_W, CEIL, FRONT_Z, WALL_T, ARCH_W, ARCH_SPRING, PARTITION_Z, DOOR_Z, CHANDELIERS } from './layout.js';
+import { HALF_W, CEIL, FRONT_Z, WALL_T, ARCH_W, ARCH_SPRING, PARTITION_Z, DOOR_Z, CHANDELIERS, KEEP_OUT } from './layout.js';
 import { ui } from './ui/dom.js';
 import { VIEW } from './world/exhibits.js';
 import { herXZ } from './world/her.js';
@@ -51,6 +51,7 @@ function blocked(x, y, z) {
     if (ax > ARCH_W - .3 || y > ARCH_SPRING + Math.sqrt(ARCH_W * ARCH_W - ax * ax) - .3) return true;
   }
   for (const c of CHANDELIERS) if (y > c.y - 1.6 * c.s && Math.hypot(x, z - c.z) < 1.5 * c.s) return true;
+  for (const k of KEEP_OUT) if (y > k.y0 && y < k.y1 && Math.hypot(x - k.x, z - k.z) < k.r) return true; // the displays
   return false;
 }
 // Pulls p in toward her until the line from her to p is clear.

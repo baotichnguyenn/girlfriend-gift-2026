@@ -31,3 +31,13 @@ export const END_Z = DOOR_Z - 25;
 export const ARCH_Z = END_Z - 3.9;
 export const CLIFF_Z = ARCH_Z - 9;
 export const GARDEN_W = 26;
+
+// Across the room from each letter, where room I keeps its bench: II a whale skeleton, III a marble statue,
+// IV and V flower sculptures. KEEP_OUT holds cylinders { x, z, r, y0, y1 } the camera mustn't enter.
+export const DISPLAY_X = STATION_Z.map((z, i) => -STATION_SIDE[i] * 7.4);
+export const KEEP_OUT = [
+  ...[4.5, 1.5, -1.5, -4.5].map((dz) => ({ x: DISPLAY_X[1], z: STATION_Z[1] + dz, r: 1.7, y0: 4.4, y1: CEIL })),
+  { x: DISPLAY_X[2], z: STATION_Z[2], r: 1.2, y0: 0, y1: 5.4 },
+  { x: DISPLAY_X[3], z: STATION_Z[3], r: 2, y0: 0, y1: 6.2 },
+  { x: DISPLAY_X[4], z: STATION_Z[4], r: 2.1, y0: 0, y1: 5.6 }
+];

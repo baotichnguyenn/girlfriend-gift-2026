@@ -109,7 +109,9 @@ One unit is about 0.75 m. The numbers that place everything are in `js/layout.js
     Behind the plinth, the entrance wall has a bronze door in a limestone arch, with the title carved above it.
     Four urns of flowers stand on pedestals: two flanking the plinth, and two flanking the arch into Gallery I.
   - Five galleries, 17 units each, are joined by walls with arched openings 8 units wide, so the arches line up in an enfilade.
-    Each gallery has silk damask walls in its own colour, dark marble skirting, a limestone picture rail and cornice, an oak parquet floor, a skylight, and a bench.
+    Each gallery has silk damask walls in its own colour, dark marble skirting, a limestone picture rail and cornice, an oak parquet floor, and a skylight.
+    Across from each letter stands a display: a bench in gallery I, a whale skeleton hung from the ceiling in II, a marble goddess after the Venus de Milo in III,
+    a cluster of mirror-polished steel pipes with flowers bursting from it in IV, and a blown-glass tower of orange, red, yellow, and blue tendrils beside a black iron basket of delphiniums, roses, and callas in V.
   - The last gallery ends in a wall with tall double doors under a half-round window.
 - **Chandeliers:** one in the middle of every room, after the crystal chandeliers of Versailles in the Louis XV style.
   Each has a gilt-bronze baluster stem ending in a pinecone finial, eight lower arms that swoop down and curl up to their candles, six upper arms, and a C-scroll under each lower arm.
@@ -178,7 +180,7 @@ Looking around sits on top of whichever rig is active:
 - The wheel or a pinch zooms between half and nearly twice the rig's distance.
 - Double-click eases the view back to the rig's own framing.
 - While she walks, the view swings back behind her by itself. Zoom stays where it was put.
-- The camera never goes through a wall, a chandelier, the floor, or the ceiling. If the line from her to the camera is blocked, it pulls in closer to her.
+- The camera never goes through a wall, a chandelier, a display, the floor, or the ceiling. If the line from her to the camera is blocked, it pulls in closer to her.
 
 Portrait-shaped screens pull every rig back and reduce side offsets so she stays in frame.
 The wall title is hidden on portrait screens because it would sit behind the intro text.

@@ -43,18 +43,19 @@ export function archBand(halfW, spring, band, d) {
   return g;
 }
 
-// Merges geometries into one, keeping position, normal, and uv (uv only if every input has it).
+// Merges geometries into one, keeping position, normal, uv, and color (uv and color only if every input has them).
 // three.js r128 ships no BufferGeometryUtils, so this stands in for it.
 export function merge(geos) {
-  const withUV = geos.every((g) => g.attributes.uv);
+  const withUV = geos.every((g) => g.attributes.uv), withCol = geos.every((g) => g.attributes.color);
   let vc = 0, ic = 0;
   geos.forEach((g) => { vc += g.attributes.position.count; ic += g.index ? g.index.count : g.attributes.position.count; });
-  const pos = new Float32Array(vc * 3), nor = new Float32Array(vc * 3), uvs = withUV ? new Float32Array(vc * 2) : null, idx = new Uint32Array(ic);
+  const pos = new Float32Array(vc * 3), nor = new Float32Array(vc * 3), uvs = withUV ? new Float32Array(vc * 2) : null, col = withCol ? new Float32Array(vc * 3) : null, idx = new Uint32Array(ic);
   let vo = 0, io = 0;
   geos.forEach((g) => {
     const n = g.attributes.position.count;
     pos.set(g.attributes.position.array, vo * 3); nor.set(g.attributes.normal.array, vo * 3);
     if (withUV) uvs.set(g.attributes.uv.array, vo * 2);
+    if (withCol) col.set(g.attributes.color.array, vo * 3);
     if (g.index) { const ia = g.index.array; for (let k = 0; k < ia.length; k++) idx[io + k] = ia[k] + vo; io += ia.length; }
     else { for (let k = 0; k < n; k++) idx[io + k] = vo + k; io += n; }
     vo += n; g.dispose();
@@ -62,6 +63,7 @@ export function merge(geos) {
   const m = new THREE.BufferGeometry();
   m.setAttribute('position', new THREE.BufferAttribute(pos, 3)); m.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
   if (withUV) m.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  if (withCol) m.setAttribute('color', new THREE.BufferAttribute(col, 3));
   m.setIndex(new THREE.BufferAttribute(idx, 1));
   return m;
 }

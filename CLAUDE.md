@@ -84,8 +84,9 @@ To change the count, update:
 | `world/index.js` | `buildWorld()`: the environment map, materials, then the sky, building, chandeliers, photos, ribbon, garden, exhibits, doors, ropes, marker, dust, and her. Also `updateWorld()`, `settleWorld()`, and `warmUp()`, which compiles the garden's shaders during loading. |
 | `world/materials.js` | `M`, the shared materials. `createMaterials()` runs first in `buildWorld()`. |
 | `world/geo.js` | Geometry helpers: `box()`, `plane()` with world-unit UVs, `archedWall()`, `archBand()`, `merge()`, `addMerged()`. |
-| `world/museum.js` | The building: floors, walls, arches, ceilings, skylights, cornices, the Great Hall, urns, benches, the carved title, dust. |
+| `world/museum.js` | The building: floors, walls, arches, ceilings, skylights, cornices, the Great Hall, urns, the bench in gallery I, the carved title, dust. |
 | `world/chandeliers.js` | A Louis XV crystal chandelier in each room, all sharing a few draw calls, and the two lights that follow her to the nearest ones. |
+| `world/displays.js` | The displays across from the letters in galleries II–V: a whale skeleton, a marble goddess, a steel-pipe flower sculpture, and a blown-glass tower beside an iron basket of flowers. They stand at `DISPLAY_X`; `KEEP_OUT` in `layout.js` keeps the camera out of them. |
 | `world/photos.js` | The 40 photo frames, their labels and wall washes, and `loadPhotos()`. |
 | `world/frames.js` | `frameGeo()`: a gilded frame around any opening. Used by the photos and the letters. |
 | `world/flora.js` | Flower geometry (roses, peonies, dahlias, lilies, irises, water lilies, flower spikes, lavender, hydrangeas, and more, mostly built by `petalRings()`), a wind-sway shader, the instanced `flora()` collector, `plant()`, and `urn()`. |
