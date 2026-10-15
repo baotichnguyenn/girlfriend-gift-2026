@@ -50,7 +50,7 @@ All content lives in `CONFIG` in `js/config.js`.
 - `finale`: eyebrow, title, and body for the card in the garden.
 
 Wall photos are files, not config. Put them in `displayed photos/` named `1.jpg`, `2.jpg`, … (`.jpeg`, `.png`, and `.webp` also work).
-`photos.js` loads them in order and stops at the first missing number. There are 30 frames; any without a photo shows a painting.
+`photos.js` loads them in order and stops at the first missing number. There are 40 frames; any without a photo shows a painting.
 Each frame is sized from its photo's shape to the slot's `area`, within `maxW` × `maxH`, so square photos and long screenshots take similar wall space. The mat slims for slim photos.
 With `#edit`, each wall label shows its slot number, and the edit panel says how many photos loaded.
 
@@ -86,7 +86,7 @@ To change the count, update:
 | `world/geo.js` | Geometry helpers: `box()`, `plane()` with world-unit UVs, `archedWall()`, `archBand()`, `merge()`, `addMerged()`. |
 | `world/museum.js` | The building: floors, walls, arches, ceilings, skylights, cornices, the Great Hall, urns, benches, the carved title, dust. |
 | `world/chandeliers.js` | A Louis XV crystal chandelier in each room, all sharing a few draw calls, and the two lights that follow her to the nearest ones. |
-| `world/photos.js` | The 30 photo frames, their labels and wall washes, and `loadPhotos()`. |
+| `world/photos.js` | The 40 photo frames, their labels and wall washes, and `loadPhotos()`. |
 | `world/frames.js` | `frameGeo()`: a gilded frame around any opening. Used by the photos and the letters. |
 | `world/flora.js` | Flower geometry (roses, peonies, dahlias, lilies, irises, water lilies, flower spikes, lavender, hydrangeas, and more, mostly built by `petalRings()`), a wind-sway shader, the instanced `flora()` collector, `plant()`, and `urn()`. |
 | `world/ribbon.js` | The path ribbon shader: walked, open to the gate, locked. |

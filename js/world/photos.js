@@ -22,8 +22,9 @@ export const SLOTS = [];
 const WALLS = [...PARTITION_Z, DOOR_Z];
 STATION_Z.forEach((zc, g) => {
   // maxW and maxH bound the picture itself; area is how much wall a picture of any shape should take
-  const side = (sx, dz, portrait) => SLOTS.push({ x: sx * (HALF_W - .01), z: zc + dz, nx: -sx, nz: 0, y: 3.05, maxW: 4, maxH: 2.6, area: 4.4, portrait });
-  side(-1, 4.6, false); side(1, 4.6, false); side(-1, -4.6, true); side(1, -4.6, true);
+  // three on each side wall, 5.2 apart, so frame and label stay inside the gallery's 16-unit walls
+  const side = (sx, dz, portrait) => SLOTS.push({ x: sx * (HALF_W - .01), z: zc + dz, nx: -sx, nz: 0, y: 3.05, maxW: 3, maxH: 2.4, area: 3.6, portrait });
+  for (const [dz, portrait] of [[5.2, false], [0, true], [-5.2, false]]) { side(-1, dz, portrait); side(1, dz, portrait); }
   const ez = WALLS[g + 1] + WALL_T / 2 + .01;
   for (const sx of [-1, 1]) SLOTS.push({ x: sx * 8.25, z: ez, nx: 0, nz: 1, y: 3.2, maxW: 4.4, maxH: 2.8, area: 5.6, portrait: false });
 });

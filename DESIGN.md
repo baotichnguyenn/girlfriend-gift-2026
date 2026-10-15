@@ -135,7 +135,7 @@ One unit is about 0.75 m. The numbers that place everything are in `js/layout.js
   | Current | Sealed, gently pulsing glow | 2.9, strong beam | Brass marker floats overhead |
   | Read | Opened, letter peeking out | 1.7 | Placard: "Opened" |
 
-- **Photographs:** 30 frames, six per gallery: two on each side wall, and two on the wall ahead, either side of the arch.
+- **Photographs:** 40 frames, eight per gallery: three on each side wall, and two on the wall ahead, either side of the arch.
   Each photo from `displayed photos/` gets a cream mat and a gilded frame sized to its shape, a warm wash of light on the wall behind it, and a wall label.
   Frames without a photo hold a soft landscape painting.
 - **Ropes:** brass stanchions at ±1.25 units either side of the path, every 3 units, joined by sagging velvet rope. They stop at the garden doors.
