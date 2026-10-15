@@ -41,6 +41,7 @@ All content lives in `CONFIG` in `js/config.js`.
 - `herName`: each letter opens with "Dear <herName>,".
 - `from`: signature on letters and placards ("Gift of Bao").
 - `photo`: path relative to `index.html`, or a `data:` URI. It becomes the figure's head and the final portrait, unless `her face/face.jpg` or `garden portrait/portrait.jpg` exists; those win.
+- `faceFocus`: `{ x, y, zoom }`, where her face's centre sits in the face photo (fractions of its width and height) and how far to zoom in. The head is a circle cropped around it. `portraitFocus` does the same for the garden portrait's 4:5 crop.
 - `together`: the start date (`YYYY-MM-DD`, Vietnam time) for the flip clock's day count.
 - `dress`: hex colour of the figure's dress.
 - `photoTitles`: optional wall-label titles for the photos, in number order.

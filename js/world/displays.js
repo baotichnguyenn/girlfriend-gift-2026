@@ -116,8 +116,8 @@ function pipes(g, f) {
     tubes.push(new THREE.CylinderGeometry(r, r, h, 12, 1, true).translate(x, .1 + h / 2, z));
   }
   g.add(new THREE.Mesh(merge(tubes), steel));
-  const mirror = new THREE.Mesh(new THREE.PlaneGeometry(3.3, 2.5).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: lin(0x9aa0a8), metalness: 1, roughness: .05, envMapIntensity: 1.6 }));
-  mirror.position.y = .101; g.add(mirror);
+  const mirror = new THREE.Mesh(new THREE.PlaneGeometry(3.3, 2.5).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: lin(0x9aa0a8), metalness: 1, roughness: .05, envMapIntensity: 1.6, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  mirror.position.y = .102; g.add(mirror); // the depth bias keeps it from flickering against the base it lies on
   // clouds of flowers spilling out between the pipes, low and high
   const at = (x, y, z) => g.localToWorld(V(x, y, z));
   g.updateMatrixWorld(true);

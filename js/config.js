@@ -5,6 +5,11 @@ export const CONFIG = {
   herName: 'Proccnin Thui',            // each letter opens with "Dear <herName>,"
   from: 'Steve and Bimo',                   // signature at the bottom of each letter
   photo: '',                     // her photo: 'her.jpg' (next to index.html) or a data: URI. Square-ish, face in the middle.
+  // Where her face sits in the face photo, as fractions of its width and height, and how far to zoom in.
+  // The head shows a circle around that point. Tuned for "her face/face.png"; for a new photo, start from { x: .5, y: .5, zoom: 1 }.
+  faceFocus: { x: .52, y: .59, zoom: 1.08 },
+  // The same for the portrait in the garden, which shows a 4:5 upright crop. Tuned for "garden portrait/portrait.png".
+  portraitFocus: { x: .58, y: .4, zoom: 1 },
   dress: '#f7dfd4',              // colour of the figure's dress
   // The day it all began, as YYYY-MM-DD in Vietnam time. The flip clock in the garden counts the days since.
   together: '2025-08-09',

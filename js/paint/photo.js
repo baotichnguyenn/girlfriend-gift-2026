@@ -36,17 +36,18 @@ function drawCartoon(x) { // drawn in a 512 x 512 space
   x.strokeStyle = '#a0464f'; x.lineWidth = 6;
   x.beginPath(); x.arc(256, 322, 30, Math.PI * 0.2, Math.PI * 0.8); x.stroke();
 }
-function coverDraw(x, img, dw, dh, focusY) {
+// Fills dw × dh from the image, centred as near as it can be on focus { x, y } (fractions of the image), zoomed in by focus.zoom.
+function coverDraw(x, img, dw, dh, focus) {
   const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
-  const sc = Math.max(dw / iw, dh / ih), sw = dw / sc, sh = dh / sc;
-  const sx = (iw - sw) / 2, sy = clamp(ih * focusY - sh / 2, 0, ih - sh);
+  const sc = Math.max(dw / iw, dh / ih) * Math.max(1, focus.zoom || 1), sw = dw / sc, sh = dh / sc;
+  const sx = clamp(iw * (focus.x ?? .5) - sw / 2, 0, iw - sw), sy = clamp(ih * (focus.y ?? .5) - sh / 2, 0, ih - sh);
   x.drawImage(img, sx, sy, sw, sh, 0, 0, dw, dh);
 }
 function drawFace(img) {
   const x = faceCanvas.getContext('2d');
   x.clearRect(0, 0, 512, 512); x.save();
   x.beginPath(); x.arc(256, 256, 236, 0, Math.PI * 2); x.clip();
-  if (img) coverDraw(x, img, 512, 512, 0.42);
+  if (img) coverDraw(x, img, 512, 512, CONFIG.faceFocus || { x: .5, y: .42 });
   else {
     const g = x.createRadialGradient(256, 200, 20, 256, 256, 360); g.addColorStop(0, '#f3d9cf'); g.addColorStop(1, '#c98a8f');
     x.fillStyle = g; x.fillRect(0, 0, 512, 512); drawCartoon(x);
@@ -58,7 +59,7 @@ function drawFace(img) {
 }
 function drawPortrait(img) {
   const x = portraitCanvas.getContext('2d');
-  if (img) coverDraw(x, img, 512, 640, 0.4);
+  if (img) coverDraw(x, img, 512, 640, CONFIG.portraitFocus || { x: .5, y: .4 });
   else {
     const g = x.createLinearGradient(0, 0, 0, 640); g.addColorStop(0, '#d9a6a2'); g.addColorStop(1, '#7c4552');
     x.fillStyle = g; x.fillRect(0, 0, 512, 640);
