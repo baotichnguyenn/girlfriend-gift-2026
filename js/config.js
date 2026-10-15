@@ -12,7 +12,7 @@ export const CONFIG = {
   photoTitles: [],
   title: 'Proccini',
   introTitle: ['Five letters.'],
-  introText: 'Read 5 letters in sequence',
+  introText: 'I hope my babii have a wonderful birthdayyy',
   // The order here IS the order she has to read them in.
   letters: [
     { title: 'The first time', medium: 'Letter, ink on paper', body: [
